@@ -3,7 +3,7 @@
 This repository contains the project developed for the iOS Programming course at National Taiwan University of Science and Technology (NTUST). The project is built using SwiftUI, following modern iOS development best practices.
 
 ## About the Project
-This iOS application was created as part of the coursework to explore SwiftUI and develop an interactive and user-friendly mobile application. The project demonstrates key concepts of iOS development, including:
+The project demonstrates key concepts of iOS development, including:
 
 - SwiftUI-based UI design
 - State management
