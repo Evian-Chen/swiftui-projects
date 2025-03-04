@@ -39,7 +39,7 @@ struct ContentView: View {
     
     @State private var op1 = 0.0  // first number
     @State private var op2 = 0.0  // second number
-    
+    {}
     var body: some View {
         VStack {
             Text(result)
