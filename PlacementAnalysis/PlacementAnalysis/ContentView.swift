@@ -148,8 +148,20 @@ struct Placement: View {
 } // Placement
 
 struct NormalUnitTransition: View {
+    @State private var showAlert = false
+    
     var body: some View {
-        Text("Hello")
+        VStack() {
+            Text("hi")
+        } // VStack
+        .onAppear {
+            showAlert = true
+        }
+        .alert("這是一個普通的溫度轉換器", isPresented: $showAlert) {
+            Button("好窩", role: .cancel){}
+        } message: {
+            Text("以防萬一那個落點轉換器不被當成單位轉換所以還是寫了一個溫度轉換器來保作業一的分數dovob")
+        }
     }
 }
 
