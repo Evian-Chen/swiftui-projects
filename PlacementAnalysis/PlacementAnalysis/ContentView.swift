@@ -11,7 +11,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(.systemGray6) // 背景色（淺灰色）
+                Color(.systemGray6)
                     .ignoresSafeArea()
                 
                 VStack(spacing: 30) {
@@ -82,11 +82,12 @@ struct AlertView: View {
 } // AlertView
 
 struct Placement: View {
+    
     var placementTapped = false
     @State private var buildingIndex = 0
     @State private var planetIndex = 0
     @State private var height = 0
-    @State private var heightFocused = false
+    @FocusState private var heightFocused: Bool
     
     let buildings = ["自定義", "台北101", "高雄85大樓", "聯邦銀行大廈", "哈里發塔", "默迪卡118", "東京晴空塔", "上海中心大廈", "廣州塔", "加拿大國家電視塔"]
     let buildingHeight = [0, 509, 378, 310, 828, 679, 634, 632, 604, 553]
@@ -100,7 +101,40 @@ struct Placement: View {
         let time = sqrt((2 * fallHeight) / g)
         return (time, speed)
     }
-
+    
+    func loadComments() -> [(ClosedRange<Double>, String)] {
+        if let path = Bundle.main.path(forResource: "fallingComments", ofType: "txt") {
+            var result: [(ClosedRange<Double>, String)] = []
+            if let content = try? String(contentsOfFile: path) {
+                let lines = content.components(separatedBy: "\n")
+                
+                for line in lines {
+                    let parts = line.components(separatedBy: ", ")
+                    if parts.count == 2 {
+                        let rangeParts = parts[0].split(separator: "-").compactMap{ Double($0) }
+                        if rangeParts.count == 2 {
+                            let range = rangeParts[0]...rangeParts[1]
+                            let comment = parts[1]
+                            result.append((range, comment))
+                        }
+                    }
+                }
+            }
+            return result
+        }
+        return []
+    }
+        
+    func getFallingComment(for time: Double) -> String {
+        let comments = loadComments()
+        for (range, comment) in comments {
+            if range.contains(time) {
+                return comment
+            }
+        }
+        return "基本上人類到不了這種高度，除非從火箭掉出來。"
+    }
+        
     var body: some View {
         NavigationStack {
             ZStack {
@@ -126,7 +160,7 @@ struct Placement: View {
                                     height = buildingHeight[buildingIndex]
                                 }
                                 .padding(.bottom, 5)
-
+                                
                                 TextField("高度（公尺）", value: $height, format: .number)
                                     .textFieldStyle(.roundedBorder)
                                     .padding(.vertical, 5)
@@ -143,7 +177,7 @@ struct Placement: View {
                             .padding(.vertical, 5)
                         }
                         .keyboardType(.decimalPad)
-
+                        
                         // 選擇行星（重力影響）
                         Section(header: Text("🌍 選擇目前居住地").font(.headline)) {
                             VStack {
@@ -154,22 +188,23 @@ struct Placement: View {
                                 }
                                 .pickerStyle(.segmented)
                                 .padding(.vertical, 5)
-
+                                
                                 Text("當前重力加速度: **\(gravities[planetIndex], specifier: "%.2f") m/s²**")
                                     .foregroundColor(.blue)
                                     .font(.subheadline)
                                     .padding(.top, 5)
                             }
                         }
-
+                        
                         // 顯示計算結果
                         Section(header: Text("📊 落點分析結果").font(.headline)) {
                             let (time, speed) = calFalling()
+                            
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("墜落時間: **\(time, specifier: "%.2f") 秒**")
                                     .font(.title2)
                                     .foregroundColor(.red)
-
+                                
                                 Text("墜地前速度: **\(speed, specifier: "%.2f") m/s**")
                                     .font(.title2)
                                     .foregroundColor(.orange)
@@ -178,8 +213,8 @@ struct Placement: View {
                         }
                         
                         // 顯示結果分析
-                        Section(header: Text("💀 您的下場").font(.headline)) {
-                            Text("hi")
+                        Section(header: Text("💀 下場").font(.headline)) {
+                            Text(getFallingComment(for: time))
                         }
                     } // Form
                 } // VStack
@@ -195,9 +230,10 @@ struct Placement: View {
             }
         } // NavigationStack
     }
-
-} // Placement
-
+    
+        
+    } // Placement
+    
 struct NormalUnitTransition: View {
     @State private var showAlert = false
     @State private var curTempIndex = 0
@@ -206,7 +242,7 @@ struct NormalUnitTransition: View {
     @State private var nextUnit = ""
     @State private var curTemp = 0.0
     @State private var nextTemp = 0.0
-    @State private var focused = false
+    @FocusState private var focused: Bool
     let tempUnits = ["攝氏（Ｃ）", "華氏（F）", "克爾文（K）"]
     
     func transition() -> Double {
@@ -297,7 +333,7 @@ struct NormalUnitTransition: View {
                                 .onChange(of: curTempIndex) {
                                     nextTemp = transition()
                                 }
-                                
+                            
                         } // HStack
                         .frame(maxWidth: .infinity, alignment: .leading)
                     } // Section
@@ -324,7 +360,7 @@ struct NormalUnitTransition: View {
         }
     } // NavigationStack
 }
-
+    
 #Preview {
     ContentView()
 }
