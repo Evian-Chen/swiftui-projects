@@ -86,6 +86,8 @@ struct Placement: View {
     @State private var buildingIndex = 0
     @State private var planetIndex = 0
     @State private var height = 0
+    @State private var heightFocused = false
+    
     let buildings = ["自定義", "台北101", "高雄85大樓", "聯邦銀行大廈", "哈里發塔", "默迪卡118", "東京晴空塔", "上海中心大廈", "廣州塔", "加拿大國家電視塔"]
     let buildingHeight = [0, 509, 378, 310, 828, 679, 634, 632, 604, 553]
     let planet = ["地球", "火星", "金星", "木星", "土星"]
@@ -128,6 +130,8 @@ struct Placement: View {
                                 TextField("高度（公尺）", value: $height, format: .number)
                                     .textFieldStyle(.roundedBorder)
                                     .padding(.vertical, 5)
+                                    .keyboardType(.decimalPad)
+                                    .focused($heightFocused)
                                     .onChange(of: height) {
                                         if !buildingHeight.contains(height) {
                                             buildingIndex = 0
@@ -182,6 +186,13 @@ struct Placement: View {
             } // ZStack
             .navigationTitle("落點轉換器")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                if heightFocused {
+                    Button("Done") {
+                        heightFocused = false
+                    }
+                }
+            }
         } // NavigationStack
     }
 
@@ -193,30 +204,116 @@ struct NormalUnitTransition: View {
     @State private var nextTempIndex = 0
     @State private var curUnit = ""
     @State private var nextUnit = ""
+    @State private var curTemp = 0.0
+    @State private var nextTemp = 0.0
+    @State private var focused = false
     let tempUnits = ["攝氏（Ｃ）", "華氏（F）", "克爾文（K）"]
     
     func transition() -> Double {
-        return 0.0
+        switch curTempIndex {
+        case 0:
+            if (nextTempIndex == 1) { // C -> F
+                return curTemp * (9 / 5) + 32
+            } else if (nextTempIndex == 2) { // C -> K
+                return curTemp + 273.15
+            } else {
+                return curTemp
+            }
+        case 1:
+            if (nextTempIndex == 0) { // F -> C
+                return (curTemp - 32) * (5 / 9)
+            } else if (nextTempIndex == 2) { // F -> K
+                return (curTemp - 32) * (5 / 9) + 273.15
+            } else {
+                return curTemp
+            }
+        case 2:
+            if (nextTempIndex == 0) { // K -> C
+                return curTemp - 273.15
+            } else if (nextTempIndex == 1) { // K -> F
+                return (curTemp - 273.15) * (9 / 5) + 32
+            } else {
+                return curTemp
+            }
+        default:
+            return nextTemp
+        }
     }
     
     var body: some View {
-        NavigationStack() {
-            VStack() {
-                Color(.systemGray4).ignoresSafeArea()
+        NavigationStack {
+            ZStack {
+                Color(.white).ignoresSafeArea()
                 
-                VStack() {
-                    Section(header: Text("選擇欲轉換的溫度單位").font(.headline)) {
-                        Picker("轉換前單位", selection: $curTempIndex) {
-                            ForEach(tempUnits.indices, id: \.self) { index in
-                                Text(tempUnits[index])
+                VStack {
+                    Section(header: Text("轉換前溫度").font(.headline)) {
+                        HStack {
+                            Picker("轉換前單位", selection: $curTempIndex) {
+                                ForEach(tempUnits.indices, id: \.self) { index in
+                                    Text(tempUnits[index])
+                                }
                             }
-                        }
+                            .pickerStyle(.menu)
+                            .frame(width: 150, alignment: .leading)
+                            .padding(.leading, 20)
+                            
+                            TextField("輸入溫度", value: $curTemp, format: .number)
+                                .textFieldStyle(.roundedBorder)
+                                .keyboardType(.decimalPad)
+                                .focused($focused)
+                                .padding(.trailing, 5)
+                                .frame(width: 150)
+                            
+                            Stepper("", value: $curTemp, step: 1)
+                                .labelsHidden()
+                                .padding(.trailing, 10)
+                        } // HStack
+                        .padding(.vertical, 5)
                     } // Section
-                    .border(.black)
+                    
+                    Section(header: Text("轉換後溫度")) {
+                        HStack {
+                            Picker("轉換後單位", selection: $nextTempIndex) {
+                                ForEach(tempUnits.indices, id: \.self) { index in
+                                    Text(tempUnits[index])
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .frame(width: 150, alignment: .leading)
+                            .padding(.leading, 20)
+                            
+                            Text("\(nextTemp, specifier: "%.2f")")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.blue)
+                                .padding(.horizontal, 5)
+                                .frame(width: 150, alignment: .leading)
+                                .onChange(of: curTemp) {
+                                    nextTemp = transition()
+                                }
+                                .onChange(of: nextTempIndex) {
+                                    nextTemp = transition()
+                                }
+                                .onChange(of: curTempIndex) {
+                                    nextTemp = transition()
+                                }
+                                
+                        } // HStack
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    } // Section
                     
                 } // VStack
             }
         } // VStack
+        .navigationTitle("溫度轉換器")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if focused {
+                Button("Done") {
+                    focused = false
+                }
+            }
+        }
         .onAppear {
             showAlert = true
         }
@@ -225,9 +322,9 @@ struct NormalUnitTransition: View {
         } message: {
             Text("以防萬一那個落點轉換器不被當成單位轉換所以還是寫了一個溫度轉換器來保作業一的分數")
         }
-    }
+    } // NavigationStack
 }
 
 #Preview {
-    NormalUnitTransition()
+    ContentView()
 }
