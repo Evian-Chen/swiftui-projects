@@ -140,7 +140,10 @@ struct Placement: View {
                 return comment
             }
         }
-        return "基本上人類到不了這種高度，除非從火箭掉出來。"
+        if (speed > 442.94) {
+            return "基本上人類到不了這種高度，除非從火箭掉出來。"
+        }
+        return ""
     }
     
     func updateFallingData() {
