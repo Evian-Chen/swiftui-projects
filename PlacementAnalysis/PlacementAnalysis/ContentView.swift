@@ -86,7 +86,7 @@ struct Placement: View {
     var placementTapped = false
     @State private var buildingIndex = 0
     @State private var planetIndex = 0
-    @State private var height = 0
+    @State private var height = 0.0
     @FocusState private var heightFocused: Bool
     
     let buildings = ["自定義", "台北101", "高雄85大樓", "聯邦銀行大廈", "哈里發塔", "默迪卡118", "東京晴空塔", "上海中心大廈", "廣州塔", "加拿大國家電視塔"]
@@ -94,8 +94,13 @@ struct Placement: View {
     let planet = ["地球", "火星", "金星", "木星", "土星"]
     let gravities = [9.81, 3.7278, 9.6138, 25.8984, 11.2815]
     
+    @State var comments: [(ClosedRange<Double>, String)] = []
+    @State private var time: Double = 0.0
+    @State private var speed: Double = 0.0
+    @State private var comment: String = "還活得好好的。"
+    
     func calFalling() -> (Double, Double) {
-        let fallHeight = Double(height)
+        let fallHeight = height
         let g = gravities[planetIndex]
         let speed = sqrt(g * fallHeight * 2)
         let time = sqrt((2 * fallHeight) / g)
@@ -125,14 +130,22 @@ struct Placement: View {
         return []
     }
         
-    func getFallingComment(for time: Double) -> String {
-        let comments = loadComments()
+    func getFallingComment(for speed: Double) -> String {
+        if comments.isEmpty {
+            comments = loadComments()
+        }
         for (range, comment) in comments {
-            if range.contains(time) {
+            if range.contains(speed) {
+                print("current range: \(range) ,comment: \(comment)")
                 return comment
             }
         }
         return "基本上人類到不了這種高度，除非從火箭掉出來。"
+    }
+    
+    func updateFallingData() {
+        (time, speed) = calFalling()
+        comment = getFallingComment(for: speed)
     }
         
     var body: some View {
@@ -157,7 +170,7 @@ struct Placement: View {
                                 }
                                 .pickerStyle(.menu)
                                 .onChange(of: buildingIndex) {
-                                    height = buildingHeight[buildingIndex]
+                                    height = Double(buildingHeight[buildingIndex])
                                 }
                                 .padding(.bottom, 5)
                                 
@@ -166,17 +179,18 @@ struct Placement: View {
                                     .padding(.vertical, 5)
                                     .keyboardType(.decimalPad)
                                     .focused($heightFocused)
-                                    .onChange(of: height) {
-                                        if !buildingHeight.contains(height) {
+                                    .onChange(of: height) { _ in
+                                        let roundedHeight = Int(height.rounded())
+                                        if !buildingHeight.contains(Int(roundedHeight)) {
                                             buildingIndex = 0
                                         } else {
-                                            buildingIndex = buildingHeight.firstIndex(of: height) ?? 0
+                                            buildingIndex = buildingHeight.firstIndex(of: roundedHeight) ?? 0
                                         }
+                                        updateFallingData()
                                     }
                             }
                             .padding(.vertical, 5)
                         }
-                        .keyboardType(.decimalPad)
                         
                         // 選擇行星（重力影響）
                         Section(header: Text("🌍 選擇目前居住地").font(.headline)) {
@@ -188,6 +202,9 @@ struct Placement: View {
                                 }
                                 .pickerStyle(.segmented)
                                 .padding(.vertical, 5)
+                                .onChange(of: planetIndex) { _ in
+                                    updateFallingData()
+                                }
                                 
                                 Text("當前重力加速度: **\(gravities[planetIndex], specifier: "%.2f") m/s²**")
                                     .foregroundColor(.blue)
@@ -198,7 +215,7 @@ struct Placement: View {
                         
                         // 顯示計算結果
                         Section(header: Text("📊 落點分析結果").font(.headline)) {
-                            let (time, speed) = calFalling()
+                            
                             
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("墜落時間: **\(time, specifier: "%.2f") 秒**")
@@ -214,7 +231,7 @@ struct Placement: View {
                         
                         // 顯示結果分析
                         Section(header: Text("💀 下場").font(.headline)) {
-                            Text(getFallingComment(for: time))
+                            Text(comment)
                         }
                     } // Form
                 } // VStack
