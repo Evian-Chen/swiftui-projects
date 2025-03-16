@@ -1,13 +1,13 @@
 //
-//  coffeerUITests.swift
-//  coffeerUITests
+//  CulturalCoinsUITests.swift
+//  CulturalCoinsUITests
 //
-//  Created by mac03 on 2025/3/15.
+//  Created by mac03 on 2025/3/16.
 //
 
 import XCTest
 
-final class coffeerUITests: XCTestCase {
+final class CulturalCoinsUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

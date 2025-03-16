@@ -188,7 +188,7 @@ struct TransitionView: View {
 
 #Preview {
 //    ContentView()
-//    ExplicitView()
+    ExplicitView()
 //    GestureView()
-    TransitionView()
+//    TransitionView()
 }

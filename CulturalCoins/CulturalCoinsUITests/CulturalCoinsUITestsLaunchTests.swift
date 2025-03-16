@@ -1,13 +1,13 @@
 //
-//  coffeerUITestsLaunchTests.swift
-//  coffeerUITests
+//  CulturalCoinsUITestsLaunchTests.swift
+//  CulturalCoinsUITests
 //
-//  Created by mac03 on 2025/3/15.
+//  Created by mac03 on 2025/3/16.
 //
 
 import XCTest
 
-final class coffeerUITestsLaunchTests: XCTestCase {
+final class CulturalCoinsUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
