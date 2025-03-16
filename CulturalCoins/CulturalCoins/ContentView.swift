@@ -7,6 +7,88 @@
 
 import SwiftUI
 
+struct ActivityView: View {
+    var body: some View {
+        Text("ActivotyView")
+    }
+}
+
+struct EventView: View {
+    var body: some View {
+        Text("EventView")
+    }
+}
+
+struct ConsumeView: View {
+    var body: some View {
+        Text("ConsumeView")
+    }
+}
+
+struct AccountView: View {
+    var body: some View {
+        Text("AccountView")
+    }
+}
+
+// 列舉，包含一張圖示和一串文字
+enum TabViewItemType: String {
+    // 四種情況
+    case flame = "flame.fill"
+    case calendar = "calendar"
+    case map = "map.fill"
+    case person = "person.crop.circle"
+    
+    // 圖示
+    var image: Image {
+        return Image(systemName: self.rawValue)
+    }
+    
+    // 文字
+    var text: Text {
+        switch self {
+        case .flame: return Text("最HOT活動")
+        case .calendar: return Text("藝文活動")
+        case .map: return Text("藝文消費點")
+        case .person: return Text("我的帳戶")
+        }
+    }
+}
+
+// TabItem 的視圖
+struct TabViewItem: View {
+    // 根據指定的type內容製作物件
+    var type: TabViewItemType
+    
+    var body: some View {
+        VStack {
+            type.image
+                .renderingMode(.template)
+            type.text
+        }
+    }
+}
+
+struct MainView: View {
+    var body: some View {
+        TabView {
+            // 最HOT活動
+            ActivityView()
+                .tabItem { TabViewItem(type: .flame) }
+            // 藝文活動
+            EventView()
+                .tabItem { TabViewItem(type: .calendar) }
+            // 藝文消費點
+            ConsumeView()
+                .tabItem { TabViewItem(type: .map) }
+            // 我的帳戶
+            AccountView()
+                .tabItem { TabViewItem(type: .person) }
+        }
+        .accentColor(.orange)
+    }
+}
+
 // loading page
 struct LoadingView: View {
     @State private var opacityState: Double = 0
@@ -55,16 +137,11 @@ struct LoadingView: View {
     }
 }
 
-struct ContentView: View {var body: some View {
-    ZStack {
-        LoadingView()
-    }
-}
-} // ContentView
-
-struct MainView: View {
+struct ContentView: View {
     var body: some View {
-        Text("Hello")
+        ZStack {
+            LoadingView()
+        }
     }
 }
 
