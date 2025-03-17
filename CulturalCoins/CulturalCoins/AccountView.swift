@@ -36,45 +36,77 @@ struct AccountView: View {
                 Color(.white)
                     .ignoresSafeArea()
                 
-                // 功能服務
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("功能服務")
-                        .bold()
-                        .font(.title2)
-                        .padding(.horizontal)
-                        .foregroundColor(.green)
+                VStack {
+                    RoundedRectangle(cornerRadius: 15)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 130)
+                        .padding(.horizontal, 30)
+                        .foregroundColor(.white)
+                        .shadow(color: .black, radius: 10)
+                        .opacity(0.3)
                     
-                    LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(toolButtons.indices, id: \.self) { index in
-                            NavigationLink {
-                                toolButtons[index].destinationView
-                            } label: {
-                                
-                                // 按鈕本身
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color.orange.opacity(0.1))
-                                        .frame(width: 110, height: 120)
-                                        .overlay {
-                                            RoundedRectangle(cornerRadius: 15)
-                                                .stroke(.orange, lineWidth: 3)
-                                        }
+                    
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 13)
+                            .fill(Color.green.opacity(0.1))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 80)
+                            .padding([.leading, .trailing], 30)
+
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.green, lineWidth: 3)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 100)
+                            .padding(20)
+                    }
+                    
+                    
+                    
+                    // 功能服務
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("功能服務")
+                            .bold()
+                            .font(.title2)
+                            .padding(.horizontal, 20)
+                            .foregroundColor(.green)
+                        
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(toolButtons.indices, id: \.self) { index in
+                                NavigationLink {
+                                    toolButtons[index].destinationView
+                                } label: {
                                     
-                                    // 按鈕上面的文字和圖片
-                                    VStack {
-                                        Image(toolButtons[index].iconImageFile)
-                                            .resizable()
-                                            .frame(width: 50, height: 50)
-                                            .padding(.bottom, 10)
-                                        Text(toolButtons[index].text)
-                                            .bold()
-                                            .foregroundColor(.black)
+                                    // 按鈕本身
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(Color.orange.opacity(0.1))
+                                            .frame(width: 110, height: 120)
+                                            .overlay {
+                                                RoundedRectangle(cornerRadius: 15)
+                                                    .stroke(.orange, lineWidth: 3)
+                                            }
+                                        
+                                        // 按鈕上面的文字和圖片
+                                        VStack {
+                                            Image(toolButtons[index].iconImageFile)
+                                                .resizable()
+                                                .frame(width: 50, height: 50)
+                                                .padding(.bottom, 10)
+                                            Text(toolButtons[index].text)
+                                                .bold()
+                                                .foregroundColor(.black)
+                                        }
                                     }
                                 }
-                            }
-                        } // ForEach
-                    } // LazyVGrid
-                } // VStack
+                            } // ForEach
+                        } // LazyVGrid
+                        .padding(.horizontal, 20)
+                    } // VStack
+                }
+                
+                
+                
+                
             }
         }
     }
