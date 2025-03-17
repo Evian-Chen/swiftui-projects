@@ -7,9 +7,76 @@
 
 import SwiftUI
 
+struct TestView: View {
+    var body: some View { Text("test view") }
+}
+
+struct CustomButtonData {
+    let iconImageFile: String
+    let text: String
+    let destinationView: AnyView  // View 是一個 protocol，不能直接寫 View
+}
+
+// 常用工具按鈕 外觀設定
+struct ToolButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(width: 110, height: 120)
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color.orange, lineWidth: 3)
+            )
+    }
+}
+
 struct ActivityView: View {
+    // 使用陣列管理常用工具按鈕
+    private var toolButtons: [CustomButtonData] = [
+        CustomButtonData(iconImageFile: "coinIcon", text: "文化禮金", destinationView: AnyView(TestView())),
+        CustomButtonData(iconImageFile: "receipt", text: "消費明細", destinationView: AnyView(TestView())),
+        CustomButtonData(iconImageFile: "calendar", text: "活動收藏", destinationView: AnyView(TestView())),
+        CustomButtonData(iconImageFile: "star", text: "加碼查詢", destinationView: AnyView(TestView())),
+        CustomButtonData(iconImageFile: "chekcIn", text: "我要打卡", destinationView: AnyView(TestView()))
+    ]
+    
     var body: some View {
-        Text("ActivotyView")
+        // LazyVGrid
+        let columns = Array(repeating: GridItem(.flexible()), count: 3)
+        
+        NavigationView {
+            ZStack {
+                Color(.white)
+                    .ignoresSafeArea()
+                
+                // 功能服務
+                VStack(alignment: .leading, spacing: 20) {
+                    // frequently used tools
+                    Text("功能服務")
+                        .bold()
+                        .font(.title2)
+                        .padding(.horizontal)
+                    
+                    LazyVGrid(columns: columns, spacing: 20) {
+                        ForEach(toolButtons.indices, id: \.self) { index in
+                            NavigationLink {
+                                toolButtons[index].destinationView
+                            } label: {
+                                VStack {
+                                    Image(toolButtons[index].iconImageFile)
+                                        .resizable()
+                                        .frame(width: 50, height: 50)
+                                        .padding(.bottom, 10)
+                                    Text(toolButtons[index].text)
+                                        .bold()
+                                        .foregroundColor(.black)
+                                }
+                            }
+                            .buttonStyle(ToolButtonStyle())
+                        }
+                    } // LazyVGrid
+                }
+            }
+        }
     }
 }
 
@@ -22,6 +89,7 @@ struct EventView: View {
 struct ConsumeView: View {
     var body: some View {
         Text("ConsumeView")
+        // 可以使用 ScrollView 實作滾動查看
     }
 }
 
@@ -124,7 +192,7 @@ struct LoadingView: View {
                         withAnimation(.easeOut(duration: 1)) {
                             opacityState = 0
                         }
-                        try await Task.sleep(nanoseconds: 1_000_000_000)
+                        try await Task.sleep(nanoseconds: 500_000_000)
                         
                         // 4. 切換到 MainView
                         isLoading = true
@@ -146,7 +214,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ActivityView()
 }
 
 
