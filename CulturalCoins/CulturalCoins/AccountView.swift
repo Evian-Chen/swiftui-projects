@@ -27,6 +27,9 @@ struct AccountView: View {
         CustomButtonData(iconImageFile: "chekcIn", text: "我要打卡", destinationView: AnyView(TestView()))
     ]
     
+    // side menu
+    @State private var showMenu = false
+    
     var body: some View {
         // LazyVGrid
         let columns = Array(repeating: GridItem(.flexible()), count: 3)
@@ -114,9 +117,13 @@ struct AccountView: View {
                             .frame(height: 150)
                     }
                     
-                }
+                } // VStack
+                
+                SideMenuView(isShowing: $showMenu)
             } // ZStack
-            .toolbar {
+            .navigationTitle("home")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar() {
                 // bell
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
@@ -141,13 +148,25 @@ struct AccountView: View {
                     
                 }
                 
-                
-            }
+                // side menu
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showMenu.toggle()
+                    } label: {
+                        Image(systemName: showMenu ? "x.circle" : "line.3.horizontal.circle")
+                            .resizable()
+                            .scaleEffect(1.3)
+                            .padding(.trailing, 20)
+                    }
+                }
+            } // toolbar
+            
         } // navigationView
+        
         
     }
 }
 
 #Preview {
-    ContentView()
+    AccountView()
 }
