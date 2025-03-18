@@ -41,30 +41,82 @@ struct AccountView: View {
                 
                 // 整個畫面的layout
                 VStack {
-                    // hello user 畫面
-                    RoundedRectangle(cornerRadius: 15)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 130)
-                        .padding(.horizontal, 30)
-                        .padding(.top, 10)
-                        .foregroundColor(.white)
-                        .shadow(color: .black, radius: 10)
-                        .opacity(0.3)
+                    // hello user
+                    Text("Hello User!")
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(.black)
+                    
+                    // 顯示剩餘金錢
+                    HStack {
+                        Image("coinIcon")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 60)
+                        
+                        Text("$ 1200")
+                            .font(.largeTitle)
+                            .bold()
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 10)
+                        
+                        Image(systemName: "arrowtriangle.forward.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.black)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(20)
+                    .background(Color.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .shadow(radius: 5)
+                    .padding(.horizontal, 20)
+                    .onTapGesture {
+                        showOptionView = true
+                    }
+                    .padding(.bottom, 20)
                     
                     // 掃碼＋付款碼
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 13)
-                            .fill(Color.green.opacity(0.1))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 80)
-                            .padding([.leading, .trailing], 30)
-
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.green, lineWidth: 3)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 100)
-                            .padding(20)
+                    HStack {
+                        Button {
+                            showOptionView = true
+                        } label: {
+                            Image(systemName: "qrcode.viewfinder")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 60)
+                                .padding(10)
+                            Text("掃碼")
+                                .font(.headline)
+                        }
+                        
+                        
+                        Image(systemName: "line.diagonal")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 50)
+                            .rotationEffect(Angle(degrees: -40))
+                            .foregroundColor(.blue)
+                        
+                        Button {
+                            showOptionView = true
+                        } label: {
+                            Image(systemName: "qrcode")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 60)
+                                .padding(10)
+                            Text("付款碼")
+                                .font(.headline)
+                        }
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(20)
+                    .background(Color.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .shadow(radius: 5)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 10)
                     
                     // 功能服務
                     ScrollView {
@@ -158,13 +210,11 @@ struct AccountView: View {
                     }
                 }
             } // toolbar
-            
         } // navigationView
-        
-        
     }
 }
 
 #Preview {
+//    ContentView()
     AccountView()
 }
