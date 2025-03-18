@@ -121,8 +121,6 @@ struct AccountView: View {
                 
                 SideMenuView(isShowing: $showMenu)
             } // ZStack
-            .navigationTitle("home")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar() {
                 // bell
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -167,6 +165,6 @@ struct AccountView: View {
     }
 }
 
-#Preview {
-    AccountView()
-}
+//#Preview {
+//    AccountView()
+//}

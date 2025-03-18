@@ -26,14 +26,66 @@ struct HeaderView: View {
 }
 
 struct RowView: View {
-    var body: some View {
-        Text("")
+    let option: SideBarOptions
+    @Binding var selectedOption: SideBarOptions?
+    
+    var selected: Bool {
+        return option == selectedOption
     }
+    
+    var body: some View {
+        HStack {
+            option.icon
+                .imageScale(.medium)
+                .foregroundColor(.blue)
+                .padding(.trailing, 10)
+            Text(option.titleText)
+                .font(.subheadline)
+        }
+        .frame(width: 140, alignment: .leading)
+        .padding(10)
+        .background(selected ? .blue.opacity(0.2) : .white)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+enum SideBarOptions: Int, CaseIterable, Identifiable {
+    case website
+    case location
+    case serviceCall
+    case deleteAccount
+    case rating
+    case logOut
+    
+    var icon: Image {
+        switch self {
+        case .website: return Image(systemName: "iphone.crop.circle")
+        case .location: return Image(systemName: "storefront.circle")
+        case .serviceCall: return Image(systemName: "phone.circle")
+        case .deleteAccount: return Image(systemName: "trash.circle")
+        case .rating: return Image(systemName: "iphone.crop.circle")
+        case .logOut: return Image(systemName: "square.and.arrow.up.circle")
+        }
+    }
+    
+    var titleText: String {
+        switch self {
+        case .website: return "官方網站"
+        case .location: return "藝文消費點"
+        case .serviceCall: return "客服專線"
+        case .deleteAccount: return "刪除帳號"
+        case .rating: return "APP評分"
+        case .logOut: return "登出"
+        }
+    }
+    
+    var id: Int { return self.rawValue }
 }
 
 struct SideMenuView: View {
     // 控制畫面出現與否
     @Binding var isShowing: Bool
+    @State private var selectedOption: SideBarOptions?
     
     var body: some View {
         ZStack {
@@ -48,6 +100,13 @@ struct SideMenuView: View {
                     
                     VStack(alignment: .leading, spacing: 20) {
                         HeaderView()
+                        ForEach(SideBarOptions.allCases) { option in
+                            Button {
+                                selectedOption = option
+                            } label: {
+                                RowView(option: option, selectedOption: $selectedOption)
+                            }
+                        }
                         
                         Spacer()
                     }
@@ -60,7 +119,7 @@ struct SideMenuView: View {
         .animation(.easeInOut, value: isShowing)
     }
 }
-//
-//#Preview {
-//    SideMenuView(isShowing: .constant(true))
-//}
+
+#Preview {
+    AccountView()
+}
