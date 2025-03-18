@@ -121,7 +121,7 @@ struct LoadingView: View {
                         }
                         try await Task.sleep(nanoseconds: 1_000_000_000)
                         
-                        // 4. 切換到 MainView
+                        // 切換到 MainView
                         isLoading = true
                     }
                 }

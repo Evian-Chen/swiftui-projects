@@ -87,6 +87,8 @@ struct SideMenuView: View {
     @Binding var isShowing: Bool
     @State private var selectedOption: SideBarOptions?
     
+    @State private var isShowingOptionView = false
+    
     var body: some View {
         ZStack {
             if isShowing {
@@ -103,6 +105,7 @@ struct SideMenuView: View {
                         ForEach(SideBarOptions.allCases) { option in
                             Button {
                                 selectedOption = option
+                                isShowingOptionView.toggle()
                             } label: {
                                 RowView(option: option, selectedOption: $selectedOption)
                             }
@@ -115,11 +118,18 @@ struct SideMenuView: View {
                     .background(.white)
                 }
             }
+            
+            if isShowingOptionView {
+                OptionView(isShowingOptionView: $isShowingOptionView)
+            }
         } // ZStack
         .animation(.easeInOut, value: isShowing)
+        .onChange(of: isShowing) { oldValue, newValue in
+            if !newValue {
+                selectedOption = nil // 側邊欄關閉時重設選擇
+            }
+        }
+        
     }
 }
 
-#Preview {
-    AccountView()
-}

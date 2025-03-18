@@ -27,8 +27,8 @@ struct AccountView: View {
         CustomButtonData(iconImageFile: "chekcIn", text: "我要打卡", destinationView: AnyView(TestView()))
     ]
     
-    // side menu
     @State private var showMenu = false
+    @State private var showOptionView = false
     
     var body: some View {
         // LazyVGrid
@@ -120,12 +120,13 @@ struct AccountView: View {
                 } // VStack
                 
                 SideMenuView(isShowing: $showMenu)
+                OptionView(isShowingOptionView: $showOptionView)
             } // ZStack
             .toolbar() {
                 // bell
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        
+                        showOptionView = true
                     } label: {
                         Image(systemName: "bell.circle")
                             .resizable()
@@ -137,13 +138,12 @@ struct AccountView: View {
                 // barcode
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        
+                        showOptionView = true
                     } label: {
                         Image(systemName: "barcode.viewfinder")
                             .resizable()
                             .scaleEffect(1.3)
                     }
-                    
                 }
                 
                 // side menu
@@ -165,6 +165,6 @@ struct AccountView: View {
     }
 }
 
-//#Preview {
-//    AccountView()
-//}
+#Preview {
+    AccountView()
+}
