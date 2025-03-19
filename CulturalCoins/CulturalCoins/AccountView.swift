@@ -17,6 +17,38 @@ struct CustomButtonData {
     let destinationView: AnyView  // View 是一個 protocol，不能直接寫 View
 }
 
+struct BottomView: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 15)
+            .fill(Color.blue.opacity(0.1))
+            .frame(height: 100)
+            .padding(20)
+            .shadow(color: Color.blue.opacity(0.3), radius: 5, x: 0, y: 3)
+            .overlay(
+                HStack(spacing: 15) {
+                    Image(systemName: "phone.bubble")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.blue)
+                        .padding(.horizontal, 10)
+                    
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("客服專線")
+                            .font(.headline)
+                            .bold()
+                            .foregroundColor(.black)
+                        
+                        Text("02-412-5252")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.trailing, 15)
+                }
+            )
+    }
+}
+
 struct AccountView: View {
     // 使用陣列管理常用工具按鈕
     private var toolButtons: [CustomButtonData] = [
@@ -36,90 +68,132 @@ struct AccountView: View {
         
         NavigationView {
             ZStack {
-                Color(.white)
-                    .ignoresSafeArea()
-                
-                // 整個畫面的layout
-                VStack {
-                    // hello user
-                    Text("Hello User!")
-                        .font(.title)
-                        .bold()
-                        .foregroundColor(.black)
-                    
-                    // 顯示剩餘金錢
-                    HStack {
-                        Image("coinIcon")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 60)
+                Image("mainBackground")
+                    .resizable()
+                    .ignoresSafeArea(.all, edges: .all)
+                ScrollView {
+                    // 整個畫面的layout
+                    VStack {
+                        // toolbar
+                        HStack {
+                            HStack(spacing: 20) {
+                                Button {
+                                    showOptionView = true
+                                } label: {
+                                    Image(systemName: "bell.circle")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 28, height: 28)
+                                        .foregroundColor(.blue)
+                                }
+                                
+                                Button {
+                                    showOptionView = true
+                                } label: {
+                                    Image(systemName: "barcode.viewfinder")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 28, height: 28)
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                            
+                            Spacer()
+                            
+                            Button {
+                                showMenu.toggle()
+                            } label: {
+                                Image(systemName: "line.3.horizontal.circle")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 28, height: 28)
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 35)
+                        .frame(height: 50)
                         
-                        Text("$ 1200")
-                            .font(.largeTitle)
+                        // hello user
+                        Text("Hello User!")
+                            .font(.title)
                             .bold()
                             .foregroundColor(.black)
-                            .padding(.horizontal, 10)
                         
-                        Image(systemName: "arrowtriangle.forward.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.black)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(20)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .shadow(radius: 5)
-                    .padding(.horizontal, 20)
-                    .onTapGesture {
-                        showOptionView = true
-                    }
-                    .padding(.bottom, 20)
-                    
-                    // 掃碼＋付款碼
-                    HStack {
-                        Button {
-                            showOptionView = true
-                        } label: {
-                            Image(systemName: "qrcode.viewfinder")
+                        // 顯示剩餘金錢
+                        HStack {
+                            Image("coinIcon")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 50, height: 60)
-                                .padding(10)
-                            Text("掃碼")
-                                .font(.headline)
+                            
+                            Text("$ 1200")
+                                .font(.largeTitle)
+                                .bold()
+                                .foregroundColor(.black)
+                                .padding(.horizontal, 10)
+                            
+                            Image(systemName: "arrowtriangle.forward.fill")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(.black)
                         }
+                        .frame(maxWidth: .infinity)
+                        .padding(20)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .shadow(radius: 5)
+                        .padding(.horizontal, 20)
+                        .onTapGesture {
+                            showOptionView = true
+                        }
+                        .padding(.bottom, 20)
                         
-                        
-                        Image(systemName: "line.diagonal")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40, height: 50)
-                            .rotationEffect(Angle(degrees: -40))
+                        // 掃碼＋付款碼
+                        HStack {
+                            Button {
+                                showOptionView = true
+                            } label: {
+                                Image(systemName: "qrcode.viewfinder")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 50, height: 60)
+                                    .padding(10)
+                                Text("掃碼")
+                                    .font(.headline)
+                            }
                             .foregroundColor(.blue)
-                        
-                        Button {
-                            showOptionView = true
-                        } label: {
-                            Image(systemName: "qrcode")
+                            
+                            
+                            Image(systemName: "line.diagonal")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 50, height: 60)
-                                .padding(10)
-                            Text("付款碼")
-                                .font(.headline)
+                                .frame(width: 40, height: 50)
+                                .rotationEffect(Angle(degrees: -40))
+                                .foregroundColor(.blue)
+                            
+                            Button {
+                                showOptionView = true
+                            } label: {
+                                Image(systemName: "qrcode")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 50, height: 60)
+                                    .padding(10)
+                                Text("付款碼")
+                                    .font(.headline)
+                            }
+                            .foregroundColor(.blue)
                         }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(20)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .shadow(radius: 5)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 10)
-                    
-                    // 功能服務
-                    ScrollView {
+                        .frame(maxWidth: .infinity)
+                        .padding(20)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .shadow(radius: 5)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 10)
+                        
+                        // 功能服務
                         VStack(alignment: .leading, spacing: 20) {
                             Text("功能服務")
                                 .bold()
@@ -135,27 +209,28 @@ struct AccountView: View {
                                         // 按鈕本身
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 15)
-                                                .fill(Color.orange.opacity(0.1))
-                                                .frame(width: 105, height: 120)
-                                                .padding(.horizontal, 30)
-                                                .padding(.vertical, 5)
-                                                .overlay {
+                                                .fill(Color.orange.opacity(0.2))
+                                                .frame(width: 110, height: 125)
+                                                .shadow(color: Color.orange.opacity(0.3), radius: 5, x: 0, y: 3)
+                                                .overlay(
                                                     RoundedRectangle(cornerRadius: 15)
-                                                        .stroke(.orange, lineWidth: 3)
-                                                        .padding(.horizontal, 25)
-                                                }
+                                                        .stroke(Color.orange, lineWidth: 3)
+                                                )
                                             
-                                            // 按鈕上面的文字和圖片
+                                        
                                             VStack {
                                                 Image(toolButtons[index].iconImageFile)
                                                     .resizable()
+                                                    .scaledToFit()
                                                     .frame(width: 50, height: 50)
-                                                    .padding(.bottom, 10)
+                                                    .padding(.bottom, 8)
+
                                                 Text(toolButtons[index].text)
                                                     .bold()
+                                                    .font(.system(size: 14))
                                                     .foregroundColor(.black)
                                             }
-                                        } // ZStack
+                                        }
                                     }
                                 } // ForEach
                             } // LazyVGrid
@@ -163,58 +238,20 @@ struct AccountView: View {
                         } // VStack
                         
                         // 底部資訊
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundColor(Color.blue.opacity(0.1))
-                            .padding([.horizontal, .top], 20)
-                            .frame(height: 150)
-                    }
-                    
-                } // VStack
+                        BottomView()
+                        
+                    } // VStack
+                }
+                
                 
                 SideMenuView(isShowing: $showMenu)
                 OptionView(isShowingOptionView: $showOptionView)
             } // ZStack
-            .toolbar() {
-                // bell
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        showOptionView = true
-                    } label: {
-                        Image(systemName: "bell.circle")
-                            .resizable()
-                            .scaleEffect(1.3)
-                    }
-                    .padding(.leading, 20)
-                }
-                
-                // barcode
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        showOptionView = true
-                    } label: {
-                        Image(systemName: "barcode.viewfinder")
-                            .resizable()
-                            .scaleEffect(1.3)
-                    }
-                }
-                
-                // side menu
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showMenu.toggle()
-                    } label: {
-                        Image(systemName: showMenu ? "x.circle" : "line.3.horizontal.circle")
-                            .resizable()
-                            .scaleEffect(1.3)
-                            .padding(.trailing, 20)
-                    }
-                }
-            } // toolbar
         } // navigationView
     }
 }
 
 #Preview {
-//    ContentView()
-    AccountView()
+        ContentView()
+//    AccountView()
 }

@@ -117,6 +117,7 @@ struct SideMenuView: View {
                     .frame(width: 270, alignment: .leading)
                     .background(.white)
                 }
+//                .padding(.top, 30)
             }
             
             if isShowingOptionView {
@@ -128,6 +129,9 @@ struct SideMenuView: View {
             if !newValue {
                 selectedOption = nil // 側邊欄關閉時重設選擇
             }
+        }
+        .onTapGesture {
+            isShowing = false
         }
         
     }
