@@ -2,24 +2,14 @@
 //  GameView.swift
 //  Pachinko
 //
-//  Created by Mac25 on 2025/3/19.
+//  Created by hpcLab on 2025/3/07.
 //
+
 
 import SwiftUI
 import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
-    
-    var scoreLabel: SKLabelNode!
-    var score = 0 {
-        didSet {
-            scoreLabel.text = "Score: \(score)"
-        }
-    }
-    
     var editLabel: SKLabelNode!
     var editingMode: Bool = false {
         didSet {
@@ -31,23 +21,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    // 常用於初始化場景的設定，例如： 1.設定背景圖片。 2.加入物理引擎 (physicsBody)。 3.放置遊戲物件(addChild(...))。
+    var scoreLabel: SKLabelNode!
+    var score = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
+    
+    
     override func didMove(to view: SKView) {
-        scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
-        scoreLabel.text = "Score: 0"
-        scoreLabel.horizontalAlignmentMode = . right
-        scoreLabel.position = CGPoint(x: 980, y: 700)
-        addChild(scoreLabel)
-        
-        editLabel = SKLabelNode(fontNamed: "Chalkduster")
-        editLabel.text = "Edit"
-        editLabel.position = CGPoint(x: 80, y: 700)
-        addChild(editLabel)
-        
-        self.anchorPoint = CGPoint(x:0, y:0) // 設定場景左下角對齊 View左下角
-        
-        physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
-        physicsWorld.contactDelegate = self
+        self.anchorPoint = CGPoint(x:0 , y:0) //設定場景左下角對齊View左下角
         
         let background = SKSpriteNode(imageNamed: "background.jpg")
         background.position = CGPoint(x: 512, y: 384)
@@ -55,26 +38,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.zPosition = -1
         addChild(background)
         
-//        makeSlot(at: CGPoint(x: 128, y: 0), isGood: true)
-//        makeSlot(at: CGPoint(x: 384, y: 0), isGood: false)
-//        makeSlot(at: CGPoint(x: 640, y: 0), isGood: true)
-//        makeSlot(at: CGPoint(x: 896, y: 0), isGood: false)
-//        
-        makeBouncer(at: CGPoint(x: 128, y: 0))
-        makeBouncer(at: CGPoint(x: 384, y: 0))
-        makeBouncer(at: CGPoint(x: 640, y: 0))
-        makeBouncer(at: CGPoint(x: 896, y: 0))
+        physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
+        physicsWorld.contactDelegate = self
+        
+        editLabel = SKLabelNode(fontNamed: "Chalkduster")
+        editLabel.text = "Edit"
+        editLabel.position = CGPoint(x: 80, y: 700)
+        addChild(editLabel)
+        
+        scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+        scoreLabel.text = "Score: 0"
+        scoreLabel.horizontalAlignmentMode = . right
+        scoreLabel.position = CGPoint(x: 980, y: 700)
+        addChild(scoreLabel)
         
         makeBouncer(at: CGPoint(x: 0, y: 0))
         makeBouncer(at: CGPoint(x: 256, y: 0))
         makeBouncer(at: CGPoint(x: 512, y: 0))
         makeBouncer(at: CGPoint(x: 768, y: 0))
         makeBouncer(at: CGPoint(x: 1024, y: 0))
+        
+        
+        makeSlot(at: CGPoint(x: 128, y: 0), isGood: true)
+        makeSlot(at: CGPoint(x: 384, y: 0), isGood: false)
+        makeSlot(at: CGPoint(x: 640, y: 0), isGood: true)
+        makeSlot(at: CGPoint(x: 896, y: 0), isGood: false)
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
         if let touch = touches.first {
             let location = touch.location(in: self)
+            
             //Edit 功能
             let objects = nodes(at: location)
             if objects.contains(editLabel) {
@@ -96,7 +92,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     //create a ball
                     let ball = SKSpriteNode(imageNamed: "ballRed")
                     ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width / 2.0)
-                    ball.physicsBody?.restitution = 0.4
+                    ball.physicsBody?.restitution = 1.2
                     ball.physicsBody?.contactTestBitMask = ball.physicsBody?.collisionBitMask ?? UInt32.max
                     ball.position = location
                     ball.name = "ball"
@@ -104,13 +100,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
             
-            let ball = SKSpriteNode(imageNamed: "ballRed")
-            ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width / 2.0)
-            ball.physicsBody?.restitution = 0.9
-            ball.physicsBody?.contactTestBitMask = ball.physicsBody?.collisionBitMask ?? UInt32.max
-            ball.position = location
-            ball.name = "ball"
-            addChild(ball)
+            
+            
+            // ✅ 打印 collisionBitMask
+            //print("ball 的 collisionBitMask: \(ball.physicsBody?.collisionBitMask ?? 0)")
+            
         }
     }
     
@@ -120,6 +114,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bouncer.physicsBody = SKPhysicsBody(circleOfRadius: bouncer.size.width / 2.0)
         bouncer.physicsBody?.isDynamic = false
         addChild(bouncer)
+        
+        
     }
     
     func makeSlot(at position: CGPoint, isGood: Bool) {
@@ -135,17 +131,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             slotGlow = SKSpriteNode(imageNamed: "slotGlowBad")
             slotBase.name = "bad"
         }
+        
         slotBase.position = position
         slotGlow.position = position
         
+        slotBase.physicsBody = SKPhysicsBody(rectangleOf: slotBase.size)
+        slotBase.physicsBody?.isDynamic = false
+        
+        addChild(slotBase)
         addChild(slotGlow)
+        
         let spin = SKAction.rotate(byAngle: .pi, duration: 10)
         let spinForever = SKAction.repeatForever(spin)
         slotGlow.run(spinForever)
-        
-        slotBase.physicsBody = SKPhysicsBody(rectangleOf: slotBase.size)
-        slotBase.physicsBody?.isDynamic = false
-        addChild(slotBase)
     }
     
     func collisionBetween(ball: SKNode, object: SKNode) {
@@ -159,33 +157,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func destroy(ball: SKNode) {
+        if let fireParticles = SKEmitterNode(fileNamed: "FireParticles") {
+            fireParticles.position = ball.position
+            addChild(fireParticles)
+        }
         ball.removeFromParent()
     }
     
-    func didBegin( _ contact: SKPhysicsContact) {
+    
+    func didBegin(_ contact: SKPhysicsContact) {
         guard let nodeA = contact.bodyA.node else { return }
         guard let nodeB = contact.bodyB.node else { return }
+        
         if nodeA.name == "ball" {
             collisionBetween(ball: nodeA, object: nodeB)
         } else if nodeB.name == "ball" {
             collisionBetween(ball: nodeB, object: nodeA)
         }
     }
+    
+    
 }
 
 struct GameView: View {
     var scene: SKScene {
-        let scene = GameScene(size: CGSize(width: 1024, height: 768))  // 設定場景大小
-        scene.scaleMode = .aspectFill
+        let scene = GameScene(size: CGSize(width: 1024, height: 768)) // 設定遊戲場景大小
+        scene.scaleMode = .aspectFit
         return scene
     }
     
     var body: some View {
         SpriteView(scene: scene)
-            .ignoresSafeArea()  // 全螢幕
+            .ignoresSafeArea() // 讓畫面全螢幕顯示
     }
 }
 
-#Preview(traits: .landscapeRight) {
+#Preview(traits: .landscapeRight){// 設定為橫屏模式(右)
     GameView()
 }
+
