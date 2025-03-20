@@ -7,16 +7,10 @@
 
 import SwiftUI
 
-struct ConsumeView: View {
+struct loactionView: View {
     var body: some View {
         Text("ConsumeView")
         // 可以使用 ScrollView 實作滾動查看
-    }
-}
-
-struct ActivityView: View {
-    var body: some View {
-        Text("ActivityView")
     }
 }
 
@@ -68,7 +62,7 @@ struct MainView: View {
             EventView()
                 .tabItem { TabViewItem(type: .calendar) }
             // 藝文消費點
-            ConsumeView()
+            loactionView()
                 .tabItem { TabViewItem(type: .map) }
             // 我的帳戶
             AccountView()
