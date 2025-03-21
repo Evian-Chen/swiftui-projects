@@ -6,14 +6,25 @@
 //
 
 import UIKit
+import GoogleMaps
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    let apiKey = "AIzaSyBx8FE3SaToPdbZabmBHkE8CLOQT4mwnMk"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        GMSServices.provideAPIKey(apiKey)
+        
+        let mapView = GMSMapView()
+        mapView.frame = CGRect.init(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        self.view.addSubview(mapView)
+        
+        let camera = GMSCameraPosition.camera(withLatitude: 25.034012, longitude: 121.564461, zoom: 1.0)
+        mapView.camera = camera
+        
         return true
     }
 
