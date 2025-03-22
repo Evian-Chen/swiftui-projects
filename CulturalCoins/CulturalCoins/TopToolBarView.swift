@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct TopToolBarView: View {
+    @Binding var showingOption: Bool
+    @Binding var showingMenu: Bool
+    
     var body: some View {
         ZStack {
             HStack {
                 HStack(spacing: 20) {
                     Button {
-
+                        showingOption.toggle()
                     } label: {
                         Image(systemName: "bell.circle")
                             .resizable()
@@ -23,7 +26,7 @@ struct TopToolBarView: View {
                     }
                     
                     Button {
-                        
+                        showingOption.toggle()
                     } label: {
                         Image(systemName: "barcode.viewfinder")
                             .resizable()
@@ -36,7 +39,7 @@ struct TopToolBarView: View {
                 Spacer()
                 
                 Button {
-                    
+                    showingMenu.toggle()
                 } label: {
                     Image(systemName: "line.3.horizontal.circle")
                         .resizable()

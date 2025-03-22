@@ -16,6 +16,8 @@ struct EventView: View {
     let areas = ["台北", "新北", "基隆", "桃園", "新竹", "苗栗"]
     @State private var areaIndex = 0
     @State private var showTempView = false
+    @State var showMenu = false
+    @State var showOption = false
     
     var body: some View {
         NavigationView {
@@ -26,7 +28,7 @@ struct EventView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    TopToolBarView()
+                    TopToolBarView(showingOption: $showOption, showingMenu: $showMenu)
                     
                     // 尋找活動輸入欄位
                     HStack {
@@ -59,11 +61,10 @@ struct EventView: View {
                     
                     ScrollEventView()
                 }
+                
+                OptionView(isShowingOptionView: $showOption)
+                SideMenuView(isShowing: $showMenu)
             } // ZStack
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TestView: View {
-    var body: some View { Text("test view") }
+    var body: some View { Text("某個外部連結").bold().font(.title) }
 }
 
 struct CustomButtonData {

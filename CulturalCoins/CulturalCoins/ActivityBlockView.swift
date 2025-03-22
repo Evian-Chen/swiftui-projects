@@ -136,6 +136,3 @@ struct ActivityBlockView: View {
     }
 }
 
-#Preview {
-    ActivityBlockView()
-}

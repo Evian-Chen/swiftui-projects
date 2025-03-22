@@ -49,7 +49,3 @@ struct ActivityView: View {
         }
     }
 }
-
-#Preview {
-    ActivityView()
-}

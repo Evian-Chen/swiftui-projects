@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D88ECC412D8F014600C77906 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = D88ECC402D8F014600C77906 /* GoogleMaps */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D84330F22D866109007115C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,20 +33,23 @@
 		D84330FB2D866109007115C4 /* CulturalCoinsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CulturalCoinsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D88ECC172D8EFDA800C77906 /* Exceptions for "CulturalCoins" folder in "CulturalCoins" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D84330E02D866101007115C4 /* CulturalCoins */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D84330E32D866101007115C4 /* CulturalCoins */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D88ECC172D8EFDA800C77906 /* Exceptions for "CulturalCoins" folder in "CulturalCoins" target */,
+			);
 			path = CulturalCoins;
-			sourceTree = "<group>";
-		};
-		D84330F42D866109007115C4 /* CulturalCoinsTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CulturalCoinsTests;
-			sourceTree = "<group>";
-		};
-		D84330FE2D866109007115C4 /* CulturalCoinsUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CulturalCoinsUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D88ECC412D8F014600C77906 /* GoogleMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,8 +84,6 @@
 			isa = PBXGroup;
 			children = (
 				D84330E32D866101007115C4 /* CulturalCoins */,
-				D84330F42D866109007115C4 /* CulturalCoinsTests */,
-				D84330FE2D866109007115C4 /* CulturalCoinsUITests */,
 				D84330E22D866101007115C4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +118,7 @@
 			);
 			name = CulturalCoins;
 			packageProductDependencies = (
+				D88ECC402D8F014600C77906 /* GoogleMaps */,
 			);
 			productName = CulturalCoins;
 			productReference = D84330E12D866101007115C4 /* CulturalCoins.app */;
@@ -129,9 +136,6 @@
 			);
 			dependencies = (
 				D84330F32D866109007115C4 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				D84330F42D866109007115C4 /* CulturalCoinsTests */,
 			);
 			name = CulturalCoinsTests;
 			packageProductDependencies = (
@@ -152,9 +156,6 @@
 			);
 			dependencies = (
 				D84330FD2D866109007115C4 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				D84330FE2D866109007115C4 /* CulturalCoinsUITests */,
 			);
 			name = CulturalCoinsUITests;
 			packageProductDependencies = (
@@ -195,6 +196,9 @@
 			);
 			mainGroup = D84330D82D866101007115C4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D88ECC182D8EFE1500C77906 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D84330E22D866101007115C4 /* Products */;
 			projectDirPath = "";
@@ -398,6 +402,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CulturalCoins/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CulturalCoins/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -426,6 +431,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"CulturalCoins/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CulturalCoins/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -552,6 +558,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D88ECC182D8EFE1500C77906 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D88ECC402D8F014600C77906 /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D88ECC182D8EFE1500C77906 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D84330D92D866101007115C4 /* Project object */;
 }

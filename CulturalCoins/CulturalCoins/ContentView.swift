@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-struct loactionView: View {
-    var body: some View {
-        Text("ConsumeView")
-        // 可以使用 ScrollView 實作滾動查看
-    }
-}
-
 // 列舉，包含一張圖示和一串文字
 enum TabViewItemType: String {
     // 四種情況
@@ -62,7 +55,7 @@ struct MainView: View {
             EventView()
                 .tabItem { TabViewItem(type: .calendar) }
             // 藝文消費點
-            loactionView()
+            GoogleMapView()
                 .tabItem { TabViewItem(type: .map) }
             // 我的帳戶
             AccountView()
@@ -127,9 +120,3 @@ struct ContentView: View {
         }
     }
 }
-
-
-#Preview {
-    ContentView()
-}
-
