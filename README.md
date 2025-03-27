@@ -8,7 +8,7 @@ The project demonstrates key concepts of iOS development, including:
 - SwiftUI-based UI design
 - State management
 - Navigation and data binding
-- API integration (if applicable)
+- API integration
 
 ## Technologies Used
 - Swift
