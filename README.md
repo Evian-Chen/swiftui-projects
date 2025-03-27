@@ -6,25 +6,29 @@ This repository contains the project developed for the iOS Programming course at
 The project demonstrates key concepts of iOS development, including:
 
 - SwiftUI-based UI design
+- API integration (Firebase, Google Maps)
 - State management
 - Navigation and data binding
-- API integration
 
 ## Technologies Used
-- Swift
-- SwiftUI
+- Swift/SwiftUI
 - Xcode
+- Google Maps SDK
+- Firebase
 
 ## Getting Started
-To run this project locally, follow these steps:
+
+To run this project locally:
 
 1. Clone the repository:
-```
-git clone https://github.com/Evian-Chen/swiftui-projects.git
-```
-2. Open the project in Xcode
-3. Select a simulator or connect a physical device
-4. Build and run the app
+   ```bash
+   git clone https://github.com/Evian-Chen/swiftui-projects.git
+   ```
+2. Open the project in Xcode 15 or later
+3. Select a target simulator or connect your iPhone
+4. Click Run (⌘R)
 
-## Additional Note
-- XCode `Info.plist` multiple commands produced problem: [Solution Note](https://hackmd.io/@L5teZbLOSuegHZDK5YEvoA/BJApD5q2kg) (in Chinese Mandarine)
+## Known Issues
+
+- **Multiple commands produced output** error in `Info.plist`  
+  Refer to this [HackMD note (Mandarin)](https://hackmd.io/@L5teZbLOSuegHZDK5YEvoA/BJApD5q2kg) for a solution.
