@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    // 呼叫物件去管理城市行政區的資料
+    @StateObject var cityDistrictManager = LocationDataManager()
+    
     var body: some View {
         VStack {
             Image(systemName: "globe")
