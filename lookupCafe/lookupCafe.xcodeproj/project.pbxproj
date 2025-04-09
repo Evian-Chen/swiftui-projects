@@ -15,7 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D85C34F92D9FD9D400A9DF5D /* lookupCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = lookupCafe.app; path = "/Users/mac03/Desktop/swiftui-projects/lookupCafe/build/Debug-iphoneos/lookupCafe.app"; sourceTree = "<absolute>"; };
+		D8445A2A2DA61CB5002E6B06 /* lookupCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lookupCafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -46,6 +46,7 @@
 			isa = PBXGroup;
 			children = (
 				D85C34FB2D9FD9D400A9DF5D /* lookupCafe */,
+				D8445A2A2DA61CB5002E6B06 /* lookupCafe.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -76,7 +77,7 @@
 				D85C35172DA134F300A9DF5D /* FirebaseStorage */,
 			);
 			productName = lookupCafe;
-			productReference = D85C34F92D9FD9D400A9DF5D /* lookupCafe.app */;
+			productReference = D8445A2A2DA61CB5002E6B06 /* lookupCafe.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

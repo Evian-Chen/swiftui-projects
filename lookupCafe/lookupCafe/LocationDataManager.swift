@@ -29,10 +29,10 @@ class LocationDataManager: ObservableObject {
             return
         }
         do {
+            print("json found")
             let data = try Data(contentsOf: url)
             let decoded = try JSONDecoder().decode([String: [String]].self, from: data)
             self.cityDistricts = decoded
-            print("DATA: \(self.cityDistricts)")
         } catch {
             print("error: \(error)")
         }
