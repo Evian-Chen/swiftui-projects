@@ -7,54 +7,74 @@
 
 import SwiftUI
 
-struct ProfileView: View {
-    @State private var selectedCity: String = ""
+struct PickersView: View {@State private var selectedCity: String = ""
     @State private var selectedDistrict: String = ""
-
+    @State private var searchInput: String = ""
+    
     let cities = ["台北市", "新北市", "台中市"]
     let districts = [
         "台北市": ["中正區", "大安區", "信義區"],
         "新北市": ["板橋區", "新莊區"],
         "台中市": ["西屯區", "北屯區"]
     ]
-
+    
     var body: some View {
-        HStack(spacing: 16) {
-            // 城市 Picker
-            Picker(selection: $selectedCity, label: pickerLabel(text: selectedCity.isEmpty ? "選擇城市" : selectedCity)) {
+        HStack(spacing: 10) {
+            Picker(selection: $selectedCity, label: selectedCity.isEmpty ? Text("選擇城市") : Text(selectedCity)) {
+                // 如果目前是“”空的
                 Text("選擇城市").tag("")
                 ForEach(cities, id: \.self) { city in
                     Text(city).tag(city)
                 }
-            }
+            } // picker
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
-            .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray.opacity(0.6)))
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
             
-            // 地區 Picker
-            Picker(selection: $selectedDistrict, label: pickerLabel(text: selectedDistrict.isEmpty ? "選擇行政區" : selectedDistrict)) {
-                Text("選擇行政區").tag("")
+            Picker(selection: $selectedDistrict, label: selectedDistrict.isEmpty ? Text("選擇地區") : Text(selectedDistrict)) {
+                Text("選擇地區").tag("")
                 if let options = districts[selectedCity] {
                     ForEach(options, id: \.self) { district in
                         Text(district).tag(district)
                     }
                 }
+            } // picker
+            .frame(maxWidth: .infinity)
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
+            .onChange(of: selectedCity) {
+                selectedDistrict = ""
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
-            .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray.opacity(0.6)))
-        }
-        .padding()
-    }
-
-    // 自訂 Picker 外觀 Label（模擬下拉選單框）
-    func pickerLabel(text: String) -> some View {
-        Text(text)
-            .foregroundColor(text.contains("選擇") ? .gray : .black)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
+            
+            Button {
+                // 查東西
+            } label: {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.gray)
+            }
+            .padding(8)
+            .background(.white)
+            .cornerRadius(10)
+            
+        } // hstack
+        .padding(.horizontal, 20)
+        .padding(.top, 40)
     }
 }
+
+struct ProfileView: View {
+    var body: some View {
+        ZStack {
+            Color.gray.ignoresSafeArea()
+            
+            VStack {
+                PickersView()
+                
+                Spacer()
+            }
+        }
+    }
+}
+
+
 
 #Preview {
     ProfileView()

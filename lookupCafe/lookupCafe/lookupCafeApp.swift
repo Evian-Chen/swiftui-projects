@@ -11,9 +11,9 @@ import Firebase
 @main
 struct lookupCafeApp: App {
     
-    init() {
-        FirebaseApp.configure()
-    }
+//    init() {
+//        FirebaseApp.configure()
+//    }
     var body: some Scene {
         WindowGroup {
             ContentView()
