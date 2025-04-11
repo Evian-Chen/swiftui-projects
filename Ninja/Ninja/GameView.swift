@@ -16,6 +16,23 @@ enum ForceBomb {
     case never, always, random
 }
 
+enum EnemyType: CaseIterable {
+    case cplus, caculus, linearMath, eletric
+    
+    var imageName: String {
+        switch self {
+        case .cplus: return "enemyCplus"
+        case .caculus: return "enemyCaculus"
+        case .linearMath: return "enemylinearMath"
+        case .eletric: return "enemyEletric"
+        }
+    }
+    
+    var isRare: Bool {
+        return self == .cplus
+    }
+}
+
 
 class GameScene: SKScene {
     
@@ -180,7 +197,8 @@ class GameScene: SKScene {
                 node.run(seq)
                 
                 // 6
-                score += 1
+                let isRare = node.name?.contains("Cplus") ?? false
+                score += isRare ? 5 : 1
                 
                 // 7
                 if let index = activeEnemies.firstIndex(of: node) {
@@ -260,62 +278,68 @@ class GameScene: SKScene {
     func createEnemy(forceBomb: ForceBomb = .random) {
         let enemy: SKSpriteNode
         
+        
         var enemyType = Int.random(in: 0...6)
+        let randomEnemyType = EnemyType.allCases.randomElement()!
         
         if forceBomb == .never {
             enemyType = 1
         } else if forceBomb == .always {
             enemyType = 0
         }
-        
+
         if enemyType == 0 {
-            // bomb code goes here
-            // 1
+            // bombContainer 的外觀保持固定（你原本是用 randomEnemyType，但這邊其實應該用炸彈的圖）
             enemy = SKSpriteNode()
             enemy.zPosition = 1
             enemy.name = "bombContainer"
-            
-            // 2
+
             let bombImage = SKSpriteNode(imageNamed: "sliceBomb")
             bombImage.name = "bomb"
             enemy.addChild(bombImage)
-            
-            // 3
+
+            // 播放 fuse 音效
             if bombSoundEffect != nil {
                 bombSoundEffect?.stop()
                 bombSoundEffect = nil
             }
-            
-            // 4
-            if let path = Bundle.main.url(forResource: "sliceBombFuse", withExtension: "caf") {
-                if let sound = try?  AVAudioPlayer(contentsOf: path) {
-                    bombSoundEffect = sound
-                    sound.play()
-                }
+            if let path = Bundle.main.url(forResource: "sliceBombFuse", withExtension: "caf"),
+               let sound = try? AVAudioPlayer(contentsOf: path) {
+                bombSoundEffect = sound
+                sound.play()
             }
-            
-            // 5
+
             if let emitter = SKEmitterNode(fileNamed: "sliceFuse") {
                 emitter.position = CGPoint(x: 76, y: 64)
                 enemy.addChild(emitter)
             }
-            
+
         } else {
-            enemy = SKSpriteNode(imageNamed: "penguin")
+            // 一般敵人使用 randomEnemyType
+            enemy = SKSpriteNode(imageNamed: randomEnemyType.imageName)
+            enemy.setScale(0.5)
+            enemy.name = "enemy:\(randomEnemyType)"
+
+            if randomEnemyType.isRare {
+                let glow = SKShapeNode(circleOfRadius: 70)
+                glow.strokeColor = .red
+                glow.lineWidth = 6
+                glow.glowWidth = 15
+                glow.zPosition = -1
+                enemy.addChild(glow)
+                enemy.setScale(0.6)
+            }
+
             run(SKAction.playSoundFileNamed("launch.caf", waitForCompletion: false))
-            enemy.name = "enemy"
         }
-        
-        // position code goes here
-        // 1
+
+        // 通用的敵人配置（位置、物理效果）
         let randomPosition = CGPoint(x: Int.random(in: 64...960), y: -128)
         enemy.position = randomPosition
-        
-        // 2
-        let randomAngularVelocity = CGFloat.random(in: -3...3 )
+
+        let randomAngularVelocity = CGFloat.random(in: -3...3)
         let randomXVelocity: Int
-        
-        // 3
+
         if randomPosition.x < 256 {
             randomXVelocity = Int.random(in: 8...15)
         } else if randomPosition.x < 512 {
@@ -325,19 +349,19 @@ class GameScene: SKScene {
         } else {
             randomXVelocity = -Int.random(in: 8...15)
         }
-        
-        // 4
+
         let randomYVelocity = Int.random(in: 24...32)
-        
-        // 5
+
         enemy.physicsBody = SKPhysicsBody(circleOfRadius: 64)
-        enemy.physicsBody?.velocity = CGVector(dx: randomXVelocity * 40, dy: randomYVelocity * 40)
+        let speedMultiplier: CGFloat = randomEnemyType.isRare ? 80 : 40
+        enemy.physicsBody?.velocity = CGVector(dx: CGFloat(randomXVelocity) * speedMultiplier, dy: CGFloat(randomYVelocity) * speedMultiplier)
         enemy.physicsBody?.angularVelocity = randomAngularVelocity
         enemy.physicsBody?.collisionBitMask = 0
+
         addChild(enemy)
         activeEnemies.append(enemy)
-        
     }
+
     
     func tossEnemies() {
         if isGameEnded {
@@ -401,7 +425,7 @@ class GameScene: SKScene {
             for (index, node) in activeEnemies.enumerated().reversed() {
                 if node.position.y < -140 {
                     node.removeAllActions()
-                    if node.name == "enemy" {
+                    if node.name?.starts(with: "enemy") ?? false {
                         node.name = ""
                         subtractLife()
                         node.removeFromParent()
