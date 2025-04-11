@@ -207,12 +207,12 @@ struct RecommendationSectionView: View {
 
 struct RecommendView: View {
     var body: some View {
+        // 上方應該補上一片的空白，可能適用navigationView
+        
         ScrollView {
             LazyVStack(pinnedViews: .sectionHeaders) {
                 RecommendationSectionView(category: .petCafe)
-                
                 RecommendationSectionView(category: .workCafe)
-                
                 RecommendationSectionView(category: .highRankCafe)
             }
         }
