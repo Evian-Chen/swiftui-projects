@@ -38,6 +38,9 @@ class GameScene: SKScene {
     
     var gameScore: SKLabelNode!
     
+    var pauseButton: SKSpriteNode!
+    var isGamePaused = false
+    
     var isGameEnded = false
     
     var score = 0 {
@@ -93,6 +96,17 @@ class GameScene: SKScene {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             self?.tossEnemies()
         }
+        
+        func createPauseButton() {
+            pauseButton = SKSpriteNode(imageNamed: "pauseButton")
+            pauseButton.name = "pauseButton"
+            pauseButton.position = CGPoint(x: 60, y: 700)
+            pauseButton.zPosition = 10
+            pauseButton.setScale(0.5)
+            addChild(pauseButton)
+        }
+
+        createPauseButton()
     }
     
     
@@ -134,15 +148,60 @@ class GameScene: SKScene {
         addChild(activeSliceFG)
     }
     
+    func togglePause() {
+        isGamePaused.toggle()
+        isPaused = isGamePaused
+
+        let textureName = isGamePaused ? "playButton" : "pauseButton"
+        pauseButton.texture = SKTexture(imageNamed: textureName)
+
+        // 加入暫停與繼續的音效
+        let soundName = isGamePaused ? "pause.caf" : "resume.caf"
+        run(SKAction.playSoundFileNamed(soundName, waitForCompletion: false))
+    }
+
+    func restartGame() {
+        // 清除所有節點（除了自己）
+        removeAllChildren()
+        activeEnemies.removeAll()
+
+        // 重設所有狀態
+        isGameEnded = false
+        isUserInteractionEnabled = true
+        score = 0
+        lives = 3
+        popupTime = 0.9
+        sequencePosition = 0
+        chainDelay = 3.0
+        nextSequenceQueued = true
+
+        // 重建場景內容
+        didMove(to: self.view!)
+    }
+
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
+        
+        let location = touch.location(in: self)
+        let tappedNodes = nodes(at: location)
+        
+        for node in tappedNodes {
+            if node.name == "pauseButton" {
+                togglePause()
+                return
+            } else if node.name == "restartButton" {
+                restartGame()
+                return
+            }
+        }
+        
         
         // 1
         activeSlicePoints.removeAll(keepingCapacity: true)
         
         // 2
-        let location = touch.location(in: self)
+//        let location = touch.location(in: self)
         
         activeSlicePoints.append(location)
         
@@ -174,7 +233,7 @@ class GameScene: SKScene {
         
         let nodesAtPoint = nodes(at: location)
         for case let node as SKSpriteNode in nodesAtPoint {
-            if node.name == "enemy" {
+            if node.name?.starts(with: "enemy:") ?? false {
                 // 1
                 if let emitter = SKEmitterNode(fileNamed: "sliceHitEnemy") {
                     emitter.position = node.position
@@ -353,7 +412,7 @@ class GameScene: SKScene {
         let randomYVelocity = Int.random(in: 24...32)
 
         enemy.physicsBody = SKPhysicsBody(circleOfRadius: 64)
-        let speedMultiplier: CGFloat = randomEnemyType.isRare ? 80 : 40
+        let speedMultiplier: CGFloat = randomEnemyType.isRare ? 50 : 30
         enemy.physicsBody?.velocity = CGVector(dx: CGFloat(randomXVelocity) * speedMultiplier, dy: CGFloat(randomYVelocity) * speedMultiplier)
         enemy.physicsBody?.angularVelocity = randomAngularVelocity
         enemy.physicsBody?.collisionBitMask = 0
@@ -497,8 +556,43 @@ class GameScene: SKScene {
             livesImages[1].texture = SKTexture(imageNamed: "sliceLifeGone")
             livesImages[2].texture = SKTexture(imageNamed: "sliceLifeGone")
         }
+        
+        showGameOver()
     }
     
+    func showGameOver() {
+        // 遮罩背景
+        let overlay = SKSpriteNode(color: UIColor(white: 0, alpha: 0.7), size: size)
+        overlay.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        overlay.zPosition = 100
+        overlay.name = "gameOverOverlay"
+        addChild(overlay)
+
+        // 顯示文字
+        let gameOverLabel = SKLabelNode(text: "Game Over")
+        gameOverLabel.fontName = "Chalkduster"
+        gameOverLabel.fontSize = 64
+        gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 + 100)
+        gameOverLabel.zPosition = 101
+        addChild(gameOverLabel)
+
+        // 顯示分數
+        let scoreLabel = SKLabelNode(text: "Score: \(score)")
+        scoreLabel.fontName = "Chalkduster"
+        scoreLabel.fontSize = 44
+        scoreLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 + 40)
+        scoreLabel.zPosition = 101
+        addChild(scoreLabel)
+
+        // 重新開始按鈕
+        let restartButton = SKSpriteNode(imageNamed: "restartButton") // 請準備一個圖片
+        restartButton.name = "restartButton"
+        restartButton.position = CGPoint(x: size.width / 2, y: size.height / 2 - 60)
+        restartButton.zPosition = 101
+        restartButton.setScale(0.5)
+        addChild(restartButton)
+    }
+
 }
 
 
