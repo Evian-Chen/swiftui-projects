@@ -88,20 +88,123 @@ let sampleCafes: [CafeInfoObject] = [
     )
 ]
 
+let SamplePetCafes: [CafeInfoObject] = [
+    CafeInfoObject(
+        shopName: "毛孩樂園咖啡",
+        city: "新北市",
+        district: "新店區",
+        address: "寶橋路123號",
+        phoneNumber: "02-2912-3456",
+        rating: 5,
+        services: [true, true, false],
+        types: ["pet", "garden", "family-friendly"],
+        weekdayText: ["每日: 10:00–20:00"]
+    ),
+    CafeInfoObject(
+        shopName: "狗狗日記咖啡廳",
+        city: "台北市",
+        district: "士林區",
+        address: "天母東路66號",
+        phoneNumber: "02-2831-9876",
+        rating: 4,
+        services: [true, false, true],
+        types: ["pet", "brunch", "cozy"],
+        weekdayText: ["週一至週五: 09:00–18:00", "週末: 10:00–19:00"]
+    ),
+    CafeInfoObject(
+        shopName: "毛絨森林",
+        city: "桃園市",
+        district: "中壢區",
+        address: "中央西路二段18號",
+        phoneNumber: "03-4256-7788",
+        rating: 4,
+        services: [true, true, true],
+        types: ["pet", "relax", "spacious"],
+        weekdayText: ["每日: 11:00–20:00"]
+    ),
+    CafeInfoObject(
+        shopName: "貓與咖啡",
+        city: "台中市",
+        district: "北區",
+        address: "梅川西路三段99號",
+        phoneNumber: "04-2233-1122",
+        rating: 3,
+        services: [true, false, false],
+        types: ["pet", "instagrammable", "minimal"],
+        weekdayText: ["平日: 10:00–18:00", "假日: 10:00–20:00"]
+    ),
+    CafeInfoObject(
+        shopName: "萌寵咖啡屋",
+        city: "高雄市",
+        district: "左營區",
+        address: "自由三路88號",
+        phoneNumber: "07-312-5566",
+        rating: 5,
+        services: [true, true, true],
+        types: ["pet", "child-friendly", "brunch"],
+        weekdayText: ["週一至週五: 10:00–17:00", "週末: 09:00–18:00"]
+    ),
+    CafeInfoObject(
+        shopName: "動物派對咖啡",
+        city: "台南市",
+        district: "中西區",
+        address: "海安路二段11號",
+        phoneNumber: "06-223-3344",
+        rating: 4,
+        services: [false, true, true],
+        types: ["pet", "event", "themed"],
+        weekdayText: ["每日: 12:00–22:00"]
+    ),
+    CafeInfoObject(
+        shopName: "尾巴搖搖咖啡館",
+        city: "新竹市",
+        district: "東區",
+        address: "光復路一段78號",
+        phoneNumber: "03-567-1234",
+        rating: 3,
+        services: [true, false, true],
+        types: ["pet", "casual", "light-meal"],
+        weekdayText: ["週一至週日: 09:30–19:00"]
+    )
+]
+
+
+// 用來調整查找每個分類咖啡店的關鍵字
+struct FilterView: View {
+    var body: some View {
+        Text("filter")
+    }
+}
+
+// 點進去之後出現該分類的每一間咖啡廳
 struct HeaderDetailView: View {
+    var categoryName: String
+    
+    @State private var showingSheetFilter = false
+    
     var body: some View {
         NavigationStack {
+            ScrollView {
+                ForEach(0 ..< SamplePetCafes.count, id: \.self) { index in
+                    CafeInfoCardView(cafeObj: SamplePetCafes[index])
+                }
+            }
             
         }
         .toolbar {
             ToolbarItem {
                 Button {
-                    
+                    showingSheetFilter = true
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "line.3.horizontal.decrease")
+                }
+                .sheet(isPresented: $showingSheetFilter) {
+                    FilterView()
                 }
             }
         }
+        .navigationTitle("這裡是\(categoryName)")
+        .navigationBarTitleDisplayMode(.large)
     }
 }
 
@@ -113,7 +216,7 @@ struct SectionHeaderView: View {
     // catagoryText 作為搜尋的關鍵字，撈出分類在寵物咖啡的所有咖啡廳
     
     var body: some View {
-        NavigationLink(destination: HeaderDetailView()) {
+        NavigationLink(destination: HeaderDetailView(categoryName: categoryText)) {
             HStack {
                 Text(categoryText)
                     .font(.title2)
