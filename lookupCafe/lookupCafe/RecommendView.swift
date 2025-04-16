@@ -88,27 +88,51 @@ let sampleCafes: [CafeInfoObject] = [
     )
 ]
 
-
+struct HeaderDetailView: View {
+    var body: some View {
+        NavigationStack {
+            
+        }
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+        }
+    }
+}
 
 // 定義每個header的外觀
 struct SectionHeaderView: View {
-    var text: String
+    var categoryText: String
+    
+    // 資料庫應該要有根據我的分類，同樣去做分類的collection
+    // catagoryText 作為搜尋的關鍵字，撈出分類在寵物咖啡的所有咖啡廳
     
     var body: some View {
-        HStack {
-            Text(text)
-                .font(.title2)
-                .bold()
-                
-            Spacer()
+        NavigationLink(destination: HeaderDetailView()) {
+            HStack {
+                Text(categoryText)
+                    .font(.title2)
+                    .bold()
+                    .foregroundColor(.white)
+
+                Spacer()
+            }
+            .padding(10)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color(.systemBlue))
+            )
+            .padding(.horizontal, 20)
         }
-        .foregroundColor(.white)
-        .frame(maxWidth: .infinity)
-        .padding(10)
-        .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemBlue)))
-        .padding(.horizontal, 20)
+        .buttonStyle(PlainButtonStyle())
     }
 }
+
 
 // 浮動header的種類
 enum RecommendationCategory: String {
@@ -147,18 +171,31 @@ struct CafeInfoObject {
     var weekdayText: [String]
 }
 
+struct CafeDetailView: View {
+    var cafeObj: CafeInfoObject
+    
+    var body: some View {
+        Text(cafeObj.shopName).font(.title)
+    }
+}
+
 // struct CafeInfoView
 struct CafeInfoCardView: View {
     var cafeObj: CafeInfoObject
     
     var body: some View {
-        Button {
-            // 點擊後連接到該咖啡廳的詳細資料，包含評論和地圖等等
+        NavigationLink {
+            CafeDetailView(cafeObj: cafeObj)
         } label: {
             HStack {
                 // 左側文字排列
                 VStack(alignment: .leading) {
-                    Text(cafeObj.shopName).font(.title).bold()
+                    HStack {
+                        Text(cafeObj.shopName).font(.title).bold()
+                        Spacer()
+                        Text(cafeObj.city)
+                        Text(cafeObj.district)
+                    }
                     
                     HStack {
                         Text(cafeObj.address)
@@ -175,6 +212,8 @@ struct CafeInfoCardView: View {
                 .foregroundColor(.black)
                 
                 Spacer()
+                
+                
             }
             .padding(.vertical, 20)
             .frame(maxWidth: .infinity)
@@ -195,11 +234,8 @@ struct RecommendationSectionView: View {
             ForEach(0 ..< 5, id: \.self) { index in
                 CafeInfoCardView(cafeObj: sampleCafes[index])
             }
-            
-            // 要增加按鈕，點擊可以看更多店家，應該要連接到另一個View
-            
         } header: {
-            SectionHeaderView(text: category.title)
+            SectionHeaderView(categoryText: category.title)
         }
     }
 }
@@ -208,12 +244,13 @@ struct RecommendationSectionView: View {
 struct RecommendView: View {
     var body: some View {
         // 上方應該補上一片的空白，可能適用navigationView
-        
-        ScrollView {
-            LazyVStack(pinnedViews: .sectionHeaders) {
-                RecommendationSectionView(category: .petCafe)
-                RecommendationSectionView(category: .workCafe)
-                RecommendationSectionView(category: .highRankCafe)
+        NavigationView {
+            ScrollView {
+                LazyVStack(pinnedViews: .sectionHeaders) {
+                    RecommendationSectionView(category: .petCafe)
+                    RecommendationSectionView(category: .workCafe)
+                    RecommendationSectionView(category: .highRankCafe)
+                }
             }
         }
     }
