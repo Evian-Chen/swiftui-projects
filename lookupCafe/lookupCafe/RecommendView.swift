@@ -168,14 +168,6 @@ let SamplePetCafes: [CafeInfoObject] = [
     )
 ]
 
-
-// 用來調整查找每個分類咖啡店的關鍵字
-struct FilterView: View {
-    var body: some View {
-        Text("filter")
-    }
-}
-
 // 點進去之後出現該分類的每一間咖啡廳
 struct HeaderDetailView: View {
     var categoryName: String
@@ -359,7 +351,8 @@ struct RecommendView: View {
     }
 }
 
-
-#Preview {
-    RecommendView()
-}
+//
+//#Preview {
+//    RecommendView()
+//}
+//
