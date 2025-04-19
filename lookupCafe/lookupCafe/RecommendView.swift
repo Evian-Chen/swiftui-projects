@@ -171,62 +171,62 @@ let SamplePetCafes: [CafeInfoObject] = [
 // 點進去之後出現該分類的每一間咖啡廳
 struct HeaderDetailView: View {
     var categoryName: String
-    
     @State private var showingSheetFilter = false
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
-                ForEach(0 ..< SamplePetCafes.count, id: \.self) { index in
-                    CafeInfoCardView(cafeObj: SamplePetCafes[index])
+                VStack(spacing: 16) {
+                    ForEach(0 ..< SamplePetCafes.count, id: \.self) { index in
+                        CafeInfoCardView(cafeObj: SamplePetCafes[index])
+                    }
+                }
+                .padding(.top)
+            }
+            .navigationTitle("這裡是 \(categoryName)")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showingSheetFilter = true
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease")
+                    }
                 }
             }
-            
-        }
-        .toolbar {
-            ToolbarItem {
-                Button {
-                    showingSheetFilter = true
-                } label: {
-                    Image(systemName: "line.3.horizontal.decrease")
-                }
-                .sheet(isPresented: $showingSheetFilter) {
-                    FilterView()
-                }
+            .sheet(isPresented: $showingSheetFilter) {
+                FilterView()
             }
         }
-        .navigationTitle("這裡是\(categoryName)")
-        .navigationBarTitleDisplayMode(.large)
     }
 }
+
 
 // 定義每個header的外觀
 struct SectionHeaderView: View {
     var categoryText: String
-    
-    // 資料庫應該要有根據我的分類，同樣去做分類的collection
-    // catagoryText 作為搜尋的關鍵字，撈出分類在寵物咖啡的所有咖啡廳
-    
+
     var body: some View {
         NavigationLink(destination: HeaderDetailView(categoryName: categoryText)) {
             HStack {
                 Text(categoryText)
-                    .font(.title2)
+                    .font(.title3)
                     .bold()
                     .foregroundColor(.white)
 
                 Spacer()
             }
-            .padding(10)
+            .padding()
             .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color(.systemBlue))
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.blue)
             )
             .padding(.horizontal, 20)
         }
         .buttonStyle(PlainButtonStyle())
     }
 }
+
 
 
 // 浮動header的種類
@@ -277,47 +277,47 @@ struct CafeDetailView: View {
 // struct CafeInfoView
 struct CafeInfoCardView: View {
     var cafeObj: CafeInfoObject
-    
+
     var body: some View {
         NavigationLink {
             CafeDetailView(cafeObj: cafeObj)
         } label: {
-            HStack {
-                // 左側文字排列
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text(cafeObj.shopName).font(.title).bold()
-                        Spacer()
-                        Text(cafeObj.city)
-                        Text(cafeObj.district)
-                    }
-                    
-                    HStack {
-                        Text(cafeObj.address)
-                        
-                        Spacer()//star.leadinghalf.filled
-                        
-                        ForEach(0 ..< cafeObj.rating, id: \.self) { index in
-                            Image(systemName: "star.fill").foregroundColor(.yellow)
-                        }
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text(cafeObj.shopName)
+                        .font(.title3)
+                        .bold()
+                        .lineLimit(1)
+
+                    Spacer()
+
+                    Text("\(cafeObj.city) \(cafeObj.district)")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+
+                Text(cafeObj.address)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+
+                HStack(spacing: 2) {
+                    ForEach(0 ..< cafeObj.rating, id: \.self) { _ in
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                            .font(.footnote)
                     }
                 }
-                .multilineTextAlignment(.leading)
-                .padding(.leading, 10)
-                .foregroundColor(.black)
-                
-                Spacer()
-                
-                
             }
-            .padding(.vertical, 20)
-            .frame(maxWidth: .infinity)
-            .background(Color(.systemGray6))
-            .cornerRadius(5)
+            .padding()
+            .background(Color.white)
+            .cornerRadius(12)
+            .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
             .padding(.horizontal, 20)
         }
     }
 }
+
 
 // 定義每個section，包含header和咖啡廳的內容
 struct RecommendationSectionView: View {
@@ -338,15 +338,16 @@ struct RecommendationSectionView: View {
 
 struct RecommendView: View {
     var body: some View {
-        // 上方應該補上一片的空白，可能適用navigationView
         NavigationView {
             ScrollView {
-                LazyVStack(pinnedViews: .sectionHeaders) {
+                LazyVStack(spacing: 24, pinnedViews: .sectionHeaders) {
                     RecommendationSectionView(category: .petCafe)
                     RecommendationSectionView(category: .workCafe)
                     RecommendationSectionView(category: .highRankCafe)
                 }
+                .padding(.vertical)
             }
+            .navigationTitle("推薦咖啡廳")
         }
     }
 }
