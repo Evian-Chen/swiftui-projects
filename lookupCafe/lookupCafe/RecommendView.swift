@@ -168,12 +168,33 @@ let SamplePetCafes: [CafeInfoObject] = [
     )
 ]
 
+// 用於查找篩選咖啡廳
+struct FilterQuery {
+    var keyword: [String] = [""]
+    var cities: String = "全部"
+    var districts: String = "全部"
+    var sockets: String = "全部"
+    var wifi: String = "全部"
+    var stayTime: String = "全部"
+}
+
 // 點進去之後出現該分類的每一間咖啡廳
 struct HeaderDetailView: View {
     var categoryName: String
     @State private var showingSheetFilter = false
-
+    @State var curFilterQuery: FilterQuery = FilterQuery()
+    
     var body: some View {
+        // testing
+        Text(curFilterQuery.cities)
+        Text(curFilterQuery.districts)
+        Text(curFilterQuery.sockets)
+        Text(curFilterQuery.stayTime)
+        Text(curFilterQuery.wifi)
+        ForEach(curFilterQuery.keyword.indices, id: \.self) { index in
+            Text(curFilterQuery.keyword[index])
+        }
+        
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
@@ -195,7 +216,7 @@ struct HeaderDetailView: View {
                 }
             }
             .sheet(isPresented: $showingSheetFilter) {
-                FilterView()
+                FilterView(curFilterQuery: $curFilterQuery, isPrestend: $showingSheetFilter)
             }
         }
     }
@@ -205,7 +226,7 @@ struct HeaderDetailView: View {
 // 定義每個header的外觀
 struct SectionHeaderView: View {
     var categoryText: String
-
+    
     var body: some View {
         NavigationLink(destination: HeaderDetailView(categoryName: categoryText)) {
             HStack {
@@ -213,7 +234,7 @@ struct SectionHeaderView: View {
                     .font(.title3)
                     .bold()
                     .foregroundColor(.white)
-
+                
                 Spacer()
             }
             .padding()
@@ -277,7 +298,7 @@ struct CafeDetailView: View {
 // struct CafeInfoView
 struct CafeInfoCardView: View {
     var cafeObj: CafeInfoObject
-
+    
     var body: some View {
         NavigationLink {
             CafeDetailView(cafeObj: cafeObj)
@@ -288,19 +309,19 @@ struct CafeInfoCardView: View {
                         .font(.title3)
                         .bold()
                         .lineLimit(1)
-
+                    
                     Spacer()
-
+                    
                     Text("\(cafeObj.city) \(cafeObj.district)")
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
-
+                
                 Text(cafeObj.address)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
-
+                
                 HStack(spacing: 2) {
                     ForEach(0 ..< cafeObj.rating, id: \.self) { _ in
                         Image(systemName: "star.fill")
