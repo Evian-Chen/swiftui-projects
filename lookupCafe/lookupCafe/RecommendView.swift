@@ -351,8 +351,8 @@ struct RecommendView: View {
     }
 }
 
-//
-//#Preview {
-//    RecommendView()
-//}
-//
+
+#Preview {
+    RecommendView()
+}
+

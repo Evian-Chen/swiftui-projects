@@ -6,74 +6,66 @@
 //
 import SwiftUI
 
-let cities = ["所有城市", "台北市", "新北市", "嘉義市"]
-let districts = ["所有地區", "新店區", "大安區", "中山區"]
-let sockets = ["插座", "沒有插座", "少許插座", "很多插座"]
-let wifi = ["網路", "有", "沒有"]
-let stayTime = ["用餐時間", "有限制", "無限制"]
-
 // 最後的套用按鈕要能夠回傳所有搜尋資料，回到前一個HeaderDetailView的時候，要能夠顯示過濾過的東西
 
-enum filterOption {
-    case cities
-    case districts
-    case sockets
-    case wifi
-    case statTime
+enum FilterOptions: String, CaseIterable, Identifiable {
+    var id: Self { self }
+    
+    case cities = "城市"
+    case districts = "地區"
+    case sockets = "插座"
+    case wifi = "網路"
+    case stayTime = "用餐時間"
     
     var optionsArr: [String] {
         switch self {
         case .cities:
-            return ["所有城市", "台北市", "新北市", "嘉義市"]
+            return ["全部", "台北市", "新北市", "嘉義市"]
         case .districts:
-            return ["所有地區", "新店區", "大安區", "中山區"]
+            return ["全部", "新店區", "大安區", "中山區"]
         case .sockets:
-            return ["插座", "沒有插座", "少許插座", "很多插座"]
+            return ["全部", "沒有插座", "少許插座", "很多插座"]
         case .wifi:
-            return ["網路", "有", "沒有"]
-        case .statTime:
-            return ["用餐時間", "有限制", "無限制"]
+            return ["全部", "有", "沒有"]
+        case .stayTime:
+            return ["全部", "有限制", "無限制"]
+            
         }
+    }
     
-        var defalutStr: String {
-            return self.optionsArr[0]
+    var defaultStr: String {
+        return self.rawValue
     }
 }
 
 struct filterPickerView: View {
-//    Picker(selection: $selectedCity) {
-//        ForEach(cities, id: \.self) { city in
-//            Text(city)
-//        }
-//    } label: {
-//        Text("選擇城市")
-//            .font(.headline)
-//    }
-//
-    @Binding var selectedString: String
-    
+    var filterOptionObj: FilterOptions
+    @State private var selectedIndex = 0
     
     var body: some View {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
+        Picker(selection: $selectedIndex) {
+            ForEach(filterOptionObj.optionsArr.indices) { index in
+                Text(filterOptionObj.optionsArr[index])
+            }
+        } label: {
+            Text(filterOptionObj.defaultStr)
+                .font(.headline)
+        }
     }
 }
 
 struct FilterView: View {
     @State private var searchText = ""
     @State private var isEditing = false
-    
-    @State private var selectedCity = "所有城市"
-    @State private var selectedDistrict = "所有地區"
-    @State private var selectedSocket = "插座"
-    @State private var selectedWifi = "網路"
-    @State private var selectedStayTime = "用餐時間"
+    @State private var reset = false
+    @State private var apply = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading) {
             Text("篩選條件")
                 .font(.title)
                 .bold()
-                .padding(.horizontal)
+                .padding(.horizontal, 20)
             
             HStack {
                 TextField("輸入關鍵字", text: $searchText)
@@ -95,60 +87,49 @@ struct FilterView: View {
             .padding(.horizontal)
             
             Text("一般篩選")
-                .font(.headline)
-                .padding(10)
+                .font(.title).bold()
+                .padding([.leading, .top],  20)
             
-            List() {
-                Picker(selection: $selectedCity) {
-                    ForEach(cities, id: \.self) { city in
-                        Text(city)
-                    }
-                } label: {
-                    Text("選擇城市")
-                        .font(.headline)
+            List {
+                ForEach(FilterOptions.allCases) { option in
+                    filterPickerView(filterOptionObj: option)
                 }
-                
-                Picker(selection: $selectedDistrict) {
-                    ForEach(districts, id: \.self) { d in
-                        Text(d)
-                    }
-                } label: {
-                    Text("選擇地區")
-                        .font(.headline)
-                }
-                
-                Picker(selection: $selectedSocket) {
-                    ForEach(sockets, id: \.self) { s in
-                        Text(s)
-                    }
-                } label: {
-                    Text("插座使用")
-                        .font(.headline)
-                }
-                
-                Picker(selection: $selectedWifi) {
-                    ForEach(wifi, id: \.self) { w in
-                        Text(w)
-                    }
-                } label: {
-                    Text("網路")
-                        .font(.headline)
-                }
-                
-                Picker(selection: $selectedStayTime) {
-                    ForEach(stayTime, id: \.self) { time in
-                        Text(time)
-                    }
-                } label: {
-                    Text("用餐時間")
-                        .font(.headline)
-                }
-            } // list
-            
+            }
+            .listStyle(.plain)
+            .padding(.horizontal, 20)
         } // vstack
         .padding(.top)
         
-        Spacer()
+        HStack(alignment: .center) {
+            Button {
+                // 還原所有選擇
+            } label: {
+                Text("重置")
+                    .bold()
+                    .font(.title2)
+                    .padding(10)
+                    .frame(maxWidth: .infinity)
+                    .background(.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+            .padding(10)
+            
+            Button {
+                // 套用，關掉sheet，回傳所有資料
+            } label: {
+                Text("套用")
+                    .bold()
+                    .font(.title2)
+                    .padding(10)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+            .padding(10)
+        } // hstack\
+        .padding(.horizontal, 20)
     }
 }
 
