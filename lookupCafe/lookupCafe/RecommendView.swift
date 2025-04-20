@@ -186,7 +186,7 @@ struct HeaderDetailView: View {
     @State private var showingSheetFilter = false
     @State var curFilterQuery: FilterQuery = FilterQuery()
     @State private var searchText = ""
-    @State private var isEditing = false
+    @FocusState private var isFocued: Bool
     
     let columns = [
         GridItem(.adaptive(minimum: 80), spacing: 10)
@@ -201,21 +201,23 @@ struct HeaderDetailView: View {
                     .padding(12)
                     .background(Color(.systemGray6))
                     .cornerRadius(10)
-                    .onTapGesture {
-                        isEditing = true
-                    }
+                    .focused($isFocued)
                 
-                if isEditing {
+                if isFocued {
                     Button("取消") {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                        isEditing = false
+                        isFocued = false
                         searchText = ""
                     }
                     .foregroundColor(.red)
                     
                     // 新增這個關鍵字，並增加到畫面上
                     Button("新增") {
-                        curFilterQuery.keyword.append(searchText)
+                        if !searchText.isEmpty {
+                            curFilterQuery.keyword.append(searchText)
+                            searchText = ""
+                            isFocued = false
+                        }
                     }
                 } // if isEditing
             } // hstack
