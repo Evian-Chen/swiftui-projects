@@ -58,6 +58,8 @@ struct FilterView: View {
     @State private var apply = false
     @State private var newFilterQuery = FilterQuery()
     
+    @State var tempKeyword: [String] = [""]
+    
     // 用FilterOptions type抓出對應的FilterQuery裡面的值
     func binding(for option: FilterOptions) -> Binding<String> {
         switch option {
@@ -90,7 +92,9 @@ struct FilterView: View {
                     Button {
                         // 重置邏輯
                         reset.toggle()
+                        tempKeyword = curFilterQuery.keyword
                         newFilterQuery = FilterQuery()
+                        newFilterQuery.keyword = tempKeyword
                     } label: {
                         Text("重置")
                             .fontWeight(.medium)
@@ -102,7 +106,9 @@ struct FilterView: View {
                     
                     Button {
                         // 套用邏輯
+                        tempKeyword = curFilterQuery.keyword
                         curFilterQuery = newFilterQuery
+                        curFilterQuery.keyword = tempKeyword
                         isPrestend.toggle()
                     } label: {
                         Text("套用")

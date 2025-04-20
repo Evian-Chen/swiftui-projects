@@ -186,6 +186,9 @@ struct HeaderDetailView: View {
     @State private var showingSheetFilter = false
     @State var curFilterQuery: FilterQuery = FilterQuery()
     @State private var searchText = ""
+    @State private var showingDeleteAlert = false
+    @State private var labelToDel: String? = ""
+    @State private var keywordToDel: String? = nil
     @FocusState private var isFocued: Bool
     
     let columns = [
@@ -205,7 +208,6 @@ struct HeaderDetailView: View {
                 
                 if isFocued {
                     Button("取消") {
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         isFocued = false
                         searchText = ""
                     }
@@ -224,30 +226,66 @@ struct HeaderDetailView: View {
             .padding(.horizontal)
             
             // 印出篩選的內容
-            LazyVGrid(columns: columns, alignment: .leading, spacing: 10) {
+            LazyVGrid(columns: columns, alignment: .leading) {
                 ForEach(Array(Mirror(reflecting: curFilterQuery).children.enumerated()), id: \.offset) { index, child in
                     if let label = child.label {
                         if ("\(child.value)" != "全部" && label != "keyword") {
-                            Text("\(child.value)")
-                                .bold()
-                                .foregroundColor(.white)
-                                .padding(7)
-                                .background(.blue)
-                                .cornerRadius(10)
+                            Button {
+                                showingDeleteAlert = true
+                                labelToDel = label
+                            } label: {
+                                Text("\(child.value)")
+                                    .bold()
+                                    .foregroundColor(.white)
+                                    .padding(7)
+                                    .background(.blue)
+                                    .cornerRadius(10)
+                            }
                         }
                     }
                 }
                 
                 ForEach(curFilterQuery.keyword.filter { !$0.isEmpty }, id: \.self) { word in
-                    Text("\(word)")
-                        .bold()
-                        .foregroundColor(.white)
-                        .padding(7)
-                        .background(.blue)
-                        .cornerRadius(10)
+                    Button {
+                        showingDeleteAlert = true
+                        labelToDel = "keyword"
+                        keywordToDel = word
+                    } label: {
+                        Text("\(word)")
+                            .bold()
+                            .foregroundColor(.white)
+                            .padding(7)
+                            .background(.blue)
+                            .cornerRadius(10)
+                    }
                 }
             } // lazyVgrid
             .padding(20)
+            .alert("確定要刪除這個關鍵字嗎？", isPresented: $showingDeleteAlert) {
+                Button("取消", role: .cancel) { }
+                Button("刪除", role: .destructive) {
+                    if labelToDel == "keyword" {
+                        if let index = curFilterQuery.keyword.firstIndex(of: keywordToDel ?? "") {
+                            curFilterQuery.keyword.remove(at: index)
+                        }
+                    } else {
+                        switch labelToDel {
+                        case "cities":
+                            curFilterQuery.cities = "全部"
+                        case "districts":
+                            curFilterQuery.districts = "全部"
+                        case "sockets":
+                            curFilterQuery.sockets = "全部"
+                        case "wifi":
+                            curFilterQuery.wifi = "全部"
+                        case "stayTime":
+                            curFilterQuery.stayTime = "全部"
+                        default:
+                            break
+                        }
+                    }
+                }
+            }
             
             ScrollView {
                 VStack(spacing: 16) {
