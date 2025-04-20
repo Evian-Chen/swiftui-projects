@@ -39,9 +39,9 @@ enum FilterOptions: String, CaseIterable, Identifiable {
         case .sockets:
             return ["全部", "沒有插座", "少許插座", "很多插座"]
         case .wifi:
-            return ["全部", "有", "沒有"]
+            return ["全部", "有wifi", "沒有wifi"]
         case .stayTime:
-            return ["全部", "有限制", "無限制"]
+            return ["全部", "用餐時間有限制", "用餐時間無限制"]
         }
     }
     
@@ -54,11 +54,8 @@ struct FilterView: View {
     @Binding var curFilterQuery: FilterQuery
     @Binding var isPrestend: Bool
     
-    @State private var searchText = ""
-    @State private var isEditing = false
     @State private var reset = false
     @State private var apply = false
-    
     @State private var newFilterQuery = FilterQuery()
     
     // 用FilterOptions type抓出對應的FilterQuery裡面的值
@@ -81,44 +78,6 @@ struct FilterView: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 24) {
                 
-                // 標題
-                Text("關鍵字查詢")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(.horizontal)
-                
-                // 搜尋欄
-                HStack {
-                    TextField("輸入關鍵字", text: $searchText)
-                        .padding(12)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                        .onTapGesture {
-                            isEditing = true
-                        }
-                    
-                    if isEditing {
-                        Button("取消") {
-                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                            isEditing = false
-                            searchText = ""
-                        }
-                        .foregroundColor(.red)
-                        
-                        // 新增這個關鍵字，並增加到畫面上
-                        Button("新增") {
-                            newFilterQuery.keyword.append(searchText)
-                        }
-                    } // if isEditing
-                } // hstack
-                .padding(.horizontal)
-                
-                // 標題
-                Text("一般篩選")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(.horizontal)
-                
                 // Picker 區塊
                 List {
                     ForEach(FilterOptions.allCases) { option in
@@ -131,7 +90,6 @@ struct FilterView: View {
                     Button {
                         // 重置邏輯
                         reset.toggle()
-                        searchText = ""
                         newFilterQuery = FilterQuery()
                     } label: {
                         Text("重置")
@@ -159,6 +117,8 @@ struct FilterView: View {
                 .padding(.top, 30)
                 .padding(.horizontal)
                 .padding(.bottom, 40)
+                
+                Spacer()
             }
             .navigationTitle("條件篩選")
             .navigationBarTitleDisplayMode(.inline)
@@ -166,6 +126,6 @@ struct FilterView: View {
     }
 }
 
-//#Preview {
-//    FilterView()
-//}
+#Preview {
+    RecommendView()
+}

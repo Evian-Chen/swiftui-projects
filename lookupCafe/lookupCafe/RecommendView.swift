@@ -178,24 +178,75 @@ struct FilterQuery {
     var stayTime: String = "全部"
 }
 
+//struct TagViewGroup
+
 // 點進去之後出現該分類的每一間咖啡廳
 struct HeaderDetailView: View {
     var categoryName: String
     @State private var showingSheetFilter = false
     @State var curFilterQuery: FilterQuery = FilterQuery()
+    @State private var searchText = ""
+    @State private var isEditing = false
+    
+    let columns = [
+        GridItem(.adaptive(minimum: 80), spacing: 10)
+    ]
     
     var body: some View {
-        // testing
-        Text(curFilterQuery.cities)
-        Text(curFilterQuery.districts)
-        Text(curFilterQuery.sockets)
-        Text(curFilterQuery.stayTime)
-        Text(curFilterQuery.wifi)
-        ForEach(curFilterQuery.keyword.indices, id: \.self) { index in
-            Text(curFilterQuery.keyword[index])
-        }
-        
         NavigationStack {
+            
+            // 搜尋欄
+            HStack {
+                TextField("輸入關鍵字", text: $searchText)
+                    .padding(12)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .onTapGesture {
+                        isEditing = true
+                    }
+                
+                if isEditing {
+                    Button("取消") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        isEditing = false
+                        searchText = ""
+                    }
+                    .foregroundColor(.red)
+                    
+                    // 新增這個關鍵字，並增加到畫面上
+                    Button("新增") {
+                        curFilterQuery.keyword.append(searchText)
+                    }
+                } // if isEditing
+            } // hstack
+            .padding(.horizontal)
+            
+            // 印出篩選的內容
+            LazyVGrid(columns: columns, alignment: .leading, spacing: 10) {
+                ForEach(Array(Mirror(reflecting: curFilterQuery).children.enumerated()), id: \.offset) { index, child in
+                    if let label = child.label {
+                        if ("\(child.value)" != "全部" && label != "keyword") {
+                            Text("\(child.value)")
+                                .bold()
+                                .foregroundColor(.white)
+                                .padding(7)
+                                .background(.blue)
+                                .cornerRadius(10)
+                        }
+                    }
+                }
+                
+                ForEach(curFilterQuery.keyword.filter { !$0.isEmpty }, id: \.self) { word in
+                    Text("\(word)")
+                        .bold()
+                        .foregroundColor(.white)
+                        .padding(7)
+                        .background(.blue)
+                        .cornerRadius(10)
+                }
+            } // lazyVgrid
+            .padding(20)
+            
             ScrollView {
                 VStack(spacing: 16) {
                     ForEach(0 ..< SamplePetCafes.count, id: \.self) { index in
