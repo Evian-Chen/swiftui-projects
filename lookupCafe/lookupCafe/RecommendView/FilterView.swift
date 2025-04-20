@@ -1,7 +1,5 @@
 import SwiftUI
 
-
-
 struct FilterPickerView: View {
     var filterOptionObj: FilterOptions
     
@@ -21,36 +19,8 @@ struct FilterPickerView: View {
     }
 }
 
-enum FilterOptions: String, CaseIterable, Identifiable {
-    var id: Self { self }
-    
-    case cities = "城市"
-    case districts = "地區"
-    case sockets = "插座"
-    case wifi = "網路"
-    case stayTime = "用餐時間"
-    
-    var optionsArr: [String] {
-        switch self {
-        case .cities:
-            return ["全部", "台北市", "新北市", "嘉義市"]
-        case .districts:
-            return ["全部", "新店區", "大安區", "中山區"]
-        case .sockets:
-            return ["全部", "沒有插座", "少許插座", "很多插座"]
-        case .wifi:
-            return ["全部", "有wifi", "沒有wifi"]
-        case .stayTime:
-            return ["全部", "用餐時間有限制", "用餐時間無限制"]
-        }
-    }
-    
-    var defaultStr: String {
-        return self.rawValue
-    }
-}
-
 struct FilterView: View {
+    // Enums.swift
     @Binding var curFilterQuery: FilterQuery
     @Binding var isPrestend: Bool
     
