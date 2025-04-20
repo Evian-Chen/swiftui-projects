@@ -4,8 +4,32 @@
 //
 //  Created by mac03 on 2025/4/20.
 //
+import SwiftUI
 
-// 定義每個篩選的內容物
+// MARK: - TabItemObj
+/// 定義底部 TabView 的圖示與文字
+enum TabItemObj: String {
+    case recommend = "sparkle.magnifyingglass"
+    case map = "map.fill"
+    case profile = "person.crop.circle"
+    
+    /// 對應的 SF Symbol 圖示
+    var image: Image {
+        Image(systemName: self.rawValue)
+    }
+    
+    /// Tab 的顯示文字
+    var text: Text {
+        switch self {
+        case .recommend: return Text("探索")
+        case .map: return Text("首頁")
+        case .profile: return Text("我的帳號")
+        }
+    }
+}
+
+// MARK: - FilterOptions
+/// 定義篩選項目類型及對應選項內容
 enum FilterOptions: String, CaseIterable, Identifiable {
     var id: Self { self }
     
@@ -15,6 +39,7 @@ enum FilterOptions: String, CaseIterable, Identifiable {
     case wifi = "網路"
     case stayTime = "用餐時間"
     
+    /// 該篩選類別對應的選項陣列
     var optionsArr: [String] {
         switch self {
         case .cities:
@@ -30,17 +55,20 @@ enum FilterOptions: String, CaseIterable, Identifiable {
         }
     }
     
+    /// 用於顯示的標題文字（中文）
     var defaultStr: String {
-        return self.rawValue
+        self.rawValue
     }
 }
 
-// RecommendView浮動header的種類
+// MARK: - RecommendationCategory
+/// 探索頁面中的推薦分類類型
 enum RecommendationCategory: String {
     case petCafe = "petCafe"
     case workCafe = "workCafe"
     case highRankCafe = "highRankCafe"
     
+    /// 顯示在 UI 上的中文標題
     var title: String {
         switch self {
         case .petCafe:
