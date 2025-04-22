@@ -6,22 +6,26 @@
 //
 
 import SwiftUI
-import GoogleSignIn
 
 struct ProfileView: View {
-    weak var signInButton: GIDSignInButton!
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     
     var body: some View {
-        ZStack {
-            Color.gray.ignoresSafeArea()
-            
-            Text("hi")
+        if authViewModel.isSignedIn {
+            Text("sign in")
+        } else  {
+            Button {
+                authViewModel.SignInByGoogle()
+            } label: {
+                Text("Sign in by Google")
+                    .padding(10)
+                    .background(.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(7)
+            }
         }
     }
 }
 
 
-
-#Preview {
-    ProfileView()
-}

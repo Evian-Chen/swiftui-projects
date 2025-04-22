@@ -50,8 +50,10 @@ class AuthViewModel: ObservableObject {
                     return
                 }
                 
-                self.user = result?.user
-                self.isSignedIn = true
+                DispatchQueue.main.async {
+                    self.user = result?.user
+                    self.isSignedIn = true
+                }
             }
             
         }

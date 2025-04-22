@@ -22,6 +22,8 @@ struct ContentView: View {
     // 呼叫物件去管理城市行政區的資料
 //    @StateObject var cityDistrictManager = LocationDataManager()
     
+    @StateObject var authViewModel = AuthViewModel()
+    
     @State private var city = ""
     @State private var district = ""
     
@@ -36,6 +38,7 @@ struct ContentView: View {
             
             ProfileView()
                 .tabItem{ TabItemView(obj: .profile) }
+                .environmentObject(AuthViewModel())
         }
     }
 }
