@@ -12,15 +12,30 @@
 		D85C35142DA134F300A9DF5D /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = D85C35132DA134F300A9DF5D /* FirebaseDatabase */; };
 		D85C35162DA134F300A9DF5D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D85C35152DA134F300A9DF5D /* FirebaseFirestore */; };
 		D85C35182DA134F300A9DF5D /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D85C35172DA134F300A9DF5D /* FirebaseStorage */; };
+		D86D6E6C2DB76CC900A69E75 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = D86D6E6B2DB76CC900A69E75 /* GoogleSignIn */; };
+		D86D6E6E2DB76CC900A69E75 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D86D6E6D2DB76CC900A69E75 /* GoogleSignInSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D8445A2A2DA61CB5002E6B06 /* lookupCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lookupCafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D86D6E722DB77EB700A69E75 /* Exceptions for "lookupCafe" folder in "lookupCafe" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D85C34F82D9FD9D400A9DF5D /* lookupCafe */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D85C34FB2D9FD9D400A9DF5D /* lookupCafe */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D86D6E722DB77EB700A69E75 /* Exceptions for "lookupCafe" folder in "lookupCafe" target */,
+			);
 			path = lookupCafe;
 			sourceTree = "<group>";
 		};
@@ -33,9 +48,11 @@
 			files = (
 				D85C35142DA134F300A9DF5D /* FirebaseDatabase in Frameworks */,
 				D85C35162DA134F300A9DF5D /* FirebaseFirestore in Frameworks */,
+				D86D6E6E2DB76CC900A69E75 /* GoogleSignInSwift in Frameworks */,
 				D85C35122DA134F300A9DF5D /* FirebaseCore in Frameworks */,
 				D85C35182DA134F300A9DF5D /* FirebaseStorage in Frameworks */,
 				D85C35102DA134F300A9DF5D /* FirebaseAuth in Frameworks */,
+				D86D6E6C2DB76CC900A69E75 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +92,8 @@
 				D85C35132DA134F300A9DF5D /* FirebaseDatabase */,
 				D85C35152DA134F300A9DF5D /* FirebaseFirestore */,
 				D85C35172DA134F300A9DF5D /* FirebaseStorage */,
+				D86D6E6B2DB76CC900A69E75 /* GoogleSignIn */,
+				D86D6E6D2DB76CC900A69E75 /* GoogleSignInSwift */,
 			);
 			productName = lookupCafe;
 			productReference = D8445A2A2DA61CB5002E6B06 /* lookupCafe.app */;
@@ -106,6 +125,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D85C350E2DA134F300A9DF5D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				D86D6E6A2DB76CC900A69E75 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D85C34F02D9FD9D400A9DF5D;
@@ -267,6 +287,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"lookupCafe/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = lookupCafe/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -295,6 +316,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"lookupCafe/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = lookupCafe/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -345,6 +367,14 @@
 				minimumVersion = 11.11.0;
 			};
 		};
+		D86D6E6A2DB76CC900A69E75 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -372,6 +402,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D85C350E2DA134F300A9DF5D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		D86D6E6B2DB76CC900A69E75 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D86D6E6A2DB76CC900A69E75 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		D86D6E6D2DB76CC900A69E75 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D86D6E6A2DB76CC900A69E75 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
