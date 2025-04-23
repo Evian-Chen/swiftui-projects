@@ -129,7 +129,7 @@ struct HeaderDetailView: View {
                     Button {
                         showingSheetFilter = true
                     } label: {
-                        Image(systemName: "line.3.horizontal.decrease")
+                        Image(systemName: "slider.horizontal.3")
                     }
                 }
             }

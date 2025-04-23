@@ -80,3 +80,73 @@ enum RecommendationCategory: String {
         }
     }
 }
+
+// MARK: - ProfileData
+enum ProfileData: String, CaseIterable {
+    case myFavorite = "我的最愛"
+    case recentView = "最近瀏覽"
+    case editProfile = "編輯個人檔案"
+    case settings = "設定"
+    case logOut = "登出"
+    
+    @ViewBuilder
+    var ButtonView: some View {
+        switch self {
+        case .myFavorite:
+            NavigationLink {
+                MyFovoriteView()
+            } label: {
+                Text(self.rawValue)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .padding(.horizontal, 50)
+            }
+        case .recentView:
+            NavigationLink {
+                RecentViewsView()
+            } label: {
+                Text(self.rawValue)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .padding(.horizontal, 50)
+            }
+        case .editProfile:
+            NavigationLink {
+                EditProfileView()
+            } label: {
+                Text(self.rawValue)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .padding(.horizontal, 50)
+            }
+        case .settings:
+            NavigationLink {
+                SettingsView()
+            } label: {
+                Text(self.rawValue)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .padding(.horizontal, 50)
+            }
+        case .logOut:
+            NavigationLink {
+                LogOutView()
+            } label: {
+                Text(self.rawValue)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .padding(.horizontal, 50)
+            }
+        }
+    }
+}
