@@ -87,7 +87,6 @@ enum ProfileData: String, CaseIterable {
     case recentView = "最近瀏覽"
     case editProfile = "編輯個人檔案"
     case settings = "設定"
-    case logOut = "登出"
     
     @ViewBuilder
     var ButtonView: some View {
@@ -128,17 +127,6 @@ enum ProfileData: String, CaseIterable {
         case .settings:
             NavigationLink {
                 SettingsView()
-            } label: {
-                Text(self.rawValue)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    .padding(.horizontal, 50)
-            }
-        case .logOut:
-            NavigationLink {
-                LogOutView()
             } label: {
                 Text(self.rawValue)
                     .frame(maxWidth: .infinity, alignment: .leading)

@@ -34,14 +34,32 @@ struct SettingsView: View {
 }
 
 struct LogOutView: View {
+    @State private var showingAlert = false
+    var authViewModel: AuthViewModel
+    
     var body: some View {
-        Text("LogOutView")
+        Button {
+            showingAlert.toggle()
+        } label: {
+            Text("登出")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                .padding(.horizontal, 50)
+        }
+        .alert("確定要登出嗎？", isPresented: $showingAlert) {
+            Button("取消", role: .cancel) { showingAlert.toggle() }
+            Button("確定", role: .destructive) {
+                authViewModel.SignOutGoogle()
+            }
+        }
     }
 }
 
 struct SignedInView: View {
     // 已經登入的user資料
-    //    var user: User?
+        var authViewModel: AuthViewModel
     
     var body: some View {
         NavigationStack {
@@ -58,6 +76,9 @@ struct SignedInView: View {
                 ForEach(ProfileData.allCases, id: \.self) { dataCase in
                     dataCase.ButtonView
                 }
+                
+                // 登出按鍵額外設定
+                LogOutView(authViewModel: authViewModel)
             } // vstack
         }
     }
@@ -107,7 +128,7 @@ struct ProfileView: View {
     var body: some View {
         // 已經登入
         if authViewModel.isSignedIn {
-            //            SignedInView(user: authViewModel.user)
+                        SignedInView(authViewModel: authViewModel)
         } else  { // 未登入
             NotSignedInView(authViewModel: authViewModel)
         } // not signed in
@@ -115,5 +136,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    SignedInView()
+    SignedInView(authViewModel: AuthViewModel())
 }
