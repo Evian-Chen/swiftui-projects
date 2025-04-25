@@ -13,10 +13,10 @@ struct CellView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(cell.color)
+                .fill(cell.state.cellBackground)
                 .frame(width: 25, height: 25)
             
-            if cell.isShowing {
+            if cell.state == .revealed {
                 if cell.hasMine {
                     Text("💣")
                 } else {
@@ -28,8 +28,7 @@ struct CellView: View {
         }
         .onTapGesture {
             if !cell.isFlagged {
-                cell.isShowing.toggle()
-                cell.color = .red
+                cell.state = .revealed
             }
         }
         .onLongPressGesture {
@@ -75,20 +74,22 @@ class GameBoard: ObservableObject {
         for _ in 0 ..< self.row {
             var rowArray: [Cell] = []
             for _ in 0 ..< self.col {
-                rowArray.append(Cell())
+                rowArray.append(Cell(color: .gray, mineSurround: 0, state: .hidden, hasMine: false))
             }
             board.append(rowArray)
         }
+        
+        self.setUpMine()
     }
     
     func setUpMine() {
-        for i in 0 ..< self.totalMines {
+        for _ in 0 ..< self.totalMines {
             var r = Int.random(in: 0 ..< self.row)
             var c = Int.random(in: 0 ..< self.col)
             
             while board[r][c].hasMine {
-                var r = Int.random(in: 0 ..< self.row)
-                var c = Int.random(in: 0 ..< self.col)
+                r = Int.random(in: 0 ..< self.row)
+                c = Int.random(in: 0 ..< self.col)
             }
             
             board[r][c].hasMine = true
@@ -103,11 +104,19 @@ class GameBoard: ObservableObject {
 class Cell: ObservableObject, Identifiable {
     let id = UUID()
     
-    @Published var color = Color.gray
-    @Published var mineSurround = 0
-    @Published var isShowing = false
-    @Published var isFlagged = false
-    @Published var hasMine = false
+    @Published var color: Color
+    @Published var mineSurround: Int
+    @Published var state: cellState
+    @Published var hasMine: Bool
+    @Published var isFlagged: Bool
+    
+    init(color: SwiftUICore.Color = Color.gray, mineSurround: Int = 0, state: cellState, hasMine: Bool = false, isFlagged: Bool = false) {
+        self.color = color
+        self.mineSurround = mineSurround
+        self.state = state
+        self.hasMine = hasMine
+        self.isFlagged = isFlagged
+    }
 }
 
 struct ContentView: View {

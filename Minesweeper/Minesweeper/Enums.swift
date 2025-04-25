@@ -5,6 +5,20 @@
 //  Created by mac03 on 2025/4/25.
 //
 
+enum cellState {
+    case hidden
+    case revealed
+    
+    var cellBackground: Color {
+        switch self {
+        case .hidden:
+            return .gray
+        case .revealed:
+            return .red
+        }
+    }
+}
+
 enum GameLevel {
     case easy
     case medium
