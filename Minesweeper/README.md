@@ -66,12 +66,3 @@ Defines the three difficulty levels (easy, medium, and hard), each with its resp
 
 3. Build and run the project using Xcode's simulator.
 
-## Future Enhancements
-
-- Add a timer to track how long it takes to complete a game.
-- Implement a "Game Over" state when a mine is revealed.
-- Add difficulty settings that modify the grid size and mine placement.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
