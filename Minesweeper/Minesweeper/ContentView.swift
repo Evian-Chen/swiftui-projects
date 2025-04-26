@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct CellView: View {
     @ObservedObject var cell: Cell
@@ -21,18 +22,26 @@ struct CellView: View {
                     Text("💣")
                 } else {
                     Text("\(cell.mineSurround)")
+                        .foregroundColor(cell.getTextColor())
                 }
-            } else if cell.isFlagged {
+            } else if cell.state == .flagged {
                 Text("🚩")
             }
         }
         .onTapGesture {
-            if !cell.isFlagged {
+            if cell.state == .hidden {
                 cell.state = .revealed
             }
         }
         .onLongPressGesture {
-            cell.isFlagged.toggle()
+            switch cell.state {
+            case .flagged:
+                cell.state = .hidden
+            case .hidden:
+                cell.state = .flagged
+            default:
+                break
+            }
         }
         .padding(5)
     }
@@ -74,7 +83,7 @@ class GameBoard: ObservableObject {
         for _ in 0 ..< self.row {
             var rowArray: [Cell] = []
             for _ in 0 ..< self.col {
-                rowArray.append(Cell(color: .gray, mineSurround: 0, state: .hidden, hasMine: false))
+                rowArray.append(Cell(mineSurround: 2, state: .hidden, hasMine: false))
             }
             board.append(rowArray)
         }
@@ -104,18 +113,31 @@ class GameBoard: ObservableObject {
 class Cell: ObservableObject, Identifiable {
     let id = UUID()
     
-    @Published var color: Color
     @Published var mineSurround: Int
     @Published var state: cellState
     @Published var hasMine: Bool
-    @Published var isFlagged: Bool
     
-    init(color: SwiftUICore.Color = Color.gray, mineSurround: Int = 0, state: cellState, hasMine: Bool = false, isFlagged: Bool = false) {
-        self.color = color
+    init(mineSurround: Int = 0, state: cellState = .hidden, hasMine: Bool = false) {
         self.mineSurround = mineSurround
         self.state = state
         self.hasMine = hasMine
-        self.isFlagged = isFlagged
+    }
+    
+    func getTextColor() -> Color {
+        switch self.mineSurround {
+        case 0:
+            return Color.black
+        case 1:
+            return Color.blue
+        case 2:
+            return Color.green
+        case 3:
+            return Color.yellow
+        case 4:
+            return Color.purple
+        default:
+            return Color.red
+        }
     }
 }
 

@@ -5,16 +5,22 @@
 //  Created by mac03 on 2025/4/25.
 //
 
+import SwiftUICore
+import UIKit
+
 enum cellState {
     case hidden
     case revealed
+    case flagged
     
     var cellBackground: Color {
         switch self {
         case .hidden:
-            return .gray
+            return Color(UIColor.systemGray2)
         case .revealed:
-            return .red
+            return Color(UIColor.systemGray4)
+        case .flagged:
+            return Color(UIColor.systemGray6)
         }
     }
 }
