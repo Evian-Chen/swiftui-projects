@@ -14,6 +14,10 @@ import Foundation
    "台北市": ["中正區", "大安區"],
    "新北市": ["板橋區", "新莊區"]
  }
+ 
+ 在初始化的時候，先把data從資料庫load到本地，如果資料庫有更新，再去更新本地的資料
+ -> 固定時間更新檢查是否有新的資料
+ 
  */
 class LocationDataManager: ObservableObject {
     // 監聽該物件的所有資料更改
@@ -21,6 +25,7 @@ class LocationDataManager: ObservableObject {
     
     init() {
         loadCityDistrictData()
+        loadCategoryData()
     }
     
     private func loadCityDistrictData() {
@@ -36,5 +41,9 @@ class LocationDataManager: ObservableObject {
         } catch {
             print("error: \(error)")
         }
+    }
+    
+    private func loadCategoryData() {
+        return
     }
 }
