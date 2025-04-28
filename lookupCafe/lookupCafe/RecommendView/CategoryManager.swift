@@ -55,6 +55,17 @@ class CategoryManager: ObservableObject {
     
     // TODO: read in all categories
     private func readInCategories() -> [String] {
+        if let file = Bundle.main.url(forResource: categoryFile, withExtension: "txt") {
+            do {
+                let data = try String(contentsOf: file, encoding: .utf8)
+                let lines = data.split(separator: "\n")
+                print("\(lines)")
+//                let text = lines.joined(separator: "\n")
+//                print("\(text)")
+            } catch {
+                print("reading categoryFile error: \(error)")
+            }
+        }
         return [""]
     }
     

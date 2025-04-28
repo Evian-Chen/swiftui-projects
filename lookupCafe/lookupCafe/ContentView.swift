@@ -31,7 +31,6 @@ struct ContentView: View {
         TabView {
             RecommendView()
                 .tabItem{ TabItemView(obj: .recommend) }
-                .environmentObject(CategoryManager())
             
             MapView()
                 .tabItem{ TabItemView(obj: .map) }

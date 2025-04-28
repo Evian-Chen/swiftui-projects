@@ -16,8 +16,19 @@
 		D86D6E6E2DB76CC900A69E75 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D86D6E6D2DB76CC900A69E75 /* GoogleSignInSwift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D8A0ADC02DBFE9CC00CA5BA3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D85C34F12D9FD9D400A9DF5D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D85C34F82D9FD9D400A9DF5D;
+			remoteInfo = lookupCafe;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		D8445A2A2DA61CB5002E6B06 /* lookupCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lookupCafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8A0ADBC2DBFE9CC00CA5BA3 /* lookupCafeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lookupCafeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -56,6 +67,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8A0ADB92DBFE9CC00CA5BA3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -64,6 +82,7 @@
 			children = (
 				D85C34FB2D9FD9D400A9DF5D /* lookupCafe */,
 				D8445A2A2DA61CB5002E6B06 /* lookupCafe.app */,
+				D8A0ADBC2DBFE9CC00CA5BA3 /* lookupCafeTests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,6 +118,26 @@
 			productReference = D8445A2A2DA61CB5002E6B06 /* lookupCafe.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D8A0ADBB2DBFE9CC00CA5BA3 /* lookupCafeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8A0ADC22DBFE9CC00CA5BA3 /* Build configuration list for PBXNativeTarget "lookupCafeTests" */;
+			buildPhases = (
+				D8A0ADB82DBFE9CC00CA5BA3 /* Sources */,
+				D8A0ADB92DBFE9CC00CA5BA3 /* Frameworks */,
+				D8A0ADBA2DBFE9CC00CA5BA3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D8A0ADC12DBFE9CC00CA5BA3 /* PBXTargetDependency */,
+			);
+			name = lookupCafeTests;
+			packageProductDependencies = (
+			);
+			productName = lookupCafeTests;
+			productReference = D8A0ADBC2DBFE9CC00CA5BA3 /* lookupCafeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -111,6 +150,10 @@
 				TargetAttributes = {
 					D85C34F82D9FD9D400A9DF5D = {
 						CreatedOnToolsVersion = 16.2;
+					};
+					D8A0ADBB2DBFE9CC00CA5BA3 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = D85C34F82D9FD9D400A9DF5D;
 					};
 				};
 			};
@@ -133,12 +176,20 @@
 			projectRoot = "";
 			targets = (
 				D85C34F82D9FD9D400A9DF5D /* lookupCafe */,
+				D8A0ADBB2DBFE9CC00CA5BA3 /* lookupCafeTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		D85C34F72D9FD9D400A9DF5D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8A0ADBA2DBFE9CC00CA5BA3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -155,7 +206,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8A0ADB82DBFE9CC00CA5BA3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D8A0ADC12DBFE9CC00CA5BA3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D85C34F82D9FD9D400A9DF5D /* lookupCafe */;
+			targetProxy = D8A0ADC02DBFE9CC00CA5BA3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		D85C35052D9FD9D800A9DF5D /* Debug */ = {
@@ -335,6 +401,40 @@
 			};
 			name = Release;
 		};
+		D8A0ADC32DBFE9CC00CA5BA3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.EvianChen.lookupCafeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/lookupCafe.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/lookupCafe";
+			};
+			name = Debug;
+		};
+		D8A0ADC42DBFE9CC00CA5BA3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.EvianChen.lookupCafeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/lookupCafe.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/lookupCafe";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -352,6 +452,15 @@
 			buildConfigurations = (
 				D85C35082D9FD9D800A9DF5D /* Debug */,
 				D85C35092D9FD9D800A9DF5D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8A0ADC22DBFE9CC00CA5BA3 /* Build configuration list for PBXNativeTarget "lookupCafeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8A0ADC32DBFE9CC00CA5BA3 /* Debug */,
+				D8A0ADC42DBFE9CC00CA5BA3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
