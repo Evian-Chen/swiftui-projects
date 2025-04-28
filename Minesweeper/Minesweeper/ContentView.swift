@@ -120,7 +120,7 @@ class Cell: ObservableObject, Identifiable {
     var r: Int
     var c: Int
     
-    init(mineSurround: Int = 0, state: cellState = .hidden, hasMine: Bool = false, r: Int = r, c: Int = c) {
+    init(mineSurround: Int = 0, state: cellState = .hidden, hasMine: Bool = false, r: Int = 0, c: Int = 0) {
         self.mineSurround = mineSurround
         self.state = state
         self.hasMine = hasMine

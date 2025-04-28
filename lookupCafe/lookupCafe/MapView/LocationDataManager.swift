@@ -25,7 +25,6 @@ class LocationDataManager: ObservableObject {
     
     init() {
         loadCityDistrictData()
-        loadCategoryData()
     }
     
     private func loadCityDistrictData() {
@@ -34,16 +33,12 @@ class LocationDataManager: ObservableObject {
             return
         }
         do {
-            print("json found")
+            print("city_district json found")
             let data = try Data(contentsOf: url)
             let decoded = try JSONDecoder().decode([String: [String]].self, from: data)
             self.cityDistricts = decoded
         } catch {
             print("error: \(error)")
         }
-    }
-    
-    private func loadCategoryData() {
-        return
     }
 }
