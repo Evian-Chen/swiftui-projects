@@ -80,10 +80,10 @@ class GameBoard: ObservableObject {
         self.level = level
         
         self.board = []
-        for _ in 0 ..< self.row {
+        for r in 0 ..< self.row {
             var rowArray: [Cell] = []
-            for _ in 0 ..< self.col {
-                rowArray.append(Cell(mineSurround: 2, state: .hidden, hasMine: false))
+            for c in 0 ..< self.col {
+                rowArray.append(Cell(mineSurround: 2, state: .hidden, hasMine: false, r: r, c: c))
             }
             board.append(rowArray)
         }
@@ -117,10 +117,15 @@ class Cell: ObservableObject, Identifiable {
     @Published var state: cellState
     @Published var hasMine: Bool
     
-    init(mineSurround: Int = 0, state: cellState = .hidden, hasMine: Bool = false) {
+    var r: Int
+    var c: Int
+    
+    init(mineSurround: Int = 0, state: cellState = .hidden, hasMine: Bool = false, r: Int = r, c: Int = c) {
         self.mineSurround = mineSurround
         self.state = state
         self.hasMine = hasMine
+        self.r = r
+        self.c = c
     }
     
     func getTextColor() -> Color {
