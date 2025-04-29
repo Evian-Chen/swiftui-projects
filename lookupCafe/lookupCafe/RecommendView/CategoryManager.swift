@@ -25,6 +25,7 @@ class CategoryManager: ObservableObject {
     
     // 管理整個firestore的物件
     private var fsManager = FirestoreManager()
+    private var locManager = LocationDataManager()
     
     init(categoryObjcList: [String: Categoryobjc]?) async {
         self.categories = []
@@ -53,20 +54,18 @@ class CategoryManager: ObservableObject {
         return nil
     }
     
-    // TODO: read in all categories
+    // 讀取txt檔案中所有的分類名稱（資料庫的）
     private func readInCategories() -> [String] {
         if let file = Bundle.main.url(forResource: categoryFile, withExtension: "txt") {
             do {
                 let data = try String(contentsOf: file, encoding: .utf8)
                 let lines = data.split(separator: "\n")
-                print("\(lines)")
-//                let text = lines.joined(separator: "\n")
-//                print("\(text)")
+                return lines.map {String($0)}
             } catch {
                 print("reading categoryFile error: \(error)")
             }
         }
-        return [""]
+        return []
     }
     
     private func findAllCategory() {
@@ -76,9 +75,9 @@ class CategoryManager: ObservableObject {
     
 }
 
-class Categoryobjc {
-    var categoryName: String
-    var data: DocumentSnapshot?
+class Categoryobjc: ObservableObject {
+    @Published var categoryName: String
+    @Published var data: DocumentSnapshot?
     
     init() {
         self.categoryName = "nan"
