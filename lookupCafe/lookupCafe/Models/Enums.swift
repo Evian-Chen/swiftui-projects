@@ -66,7 +66,7 @@ enum FilterOptions: String, CaseIterable, Identifiable {
 enum RecommendationCategory: String {
     case petCafe = "petCafe"
     case workCafe = "workCafe"
-    case highRankCafe = "highRankCafe"
+    case highRatings = "highRatings"
     
     /// 顯示在 UI 上的中文標題
     var title: String {
@@ -75,7 +75,7 @@ enum RecommendationCategory: String {
             return "超可愛寵物咖啡廳"
         case .workCafe:
             return "適合工作咖啡廳"
-        case .highRankCafe:
+        case .highRatings:
             return "熱門咖啡廳"
         }
     }

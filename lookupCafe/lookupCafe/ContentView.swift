@@ -23,6 +23,7 @@ struct ContentView: View {
 //    @StateObject var cityDistrictManager = LocationDataManager()
     
     @StateObject var authViewModel = AuthViewModel()
+    @StateObject var categoryManager = CategoryManager()
     
     @State private var city = ""
     @State private var district = ""
@@ -31,6 +32,7 @@ struct ContentView: View {
         TabView {
             RecommendView()
                 .tabItem{ TabItemView(obj: .recommend) }
+                .environmentObject(categoryManager)
             
             MapView()
                 .tabItem{ TabItemView(obj: .map) }
@@ -39,6 +41,9 @@ struct ContentView: View {
             ProfileView()
                 .tabItem{ TabItemView(obj: .profile) }
                 .environmentObject(AuthViewModel())
+        }
+        .task {
+            await categoryManager.asyncInit()
         }
     }
 }

@@ -18,6 +18,8 @@ struct HeaderDetailView: View {
     @State private var keywordToDel: String? = nil
     @FocusState private var isFocued: Bool
     
+    @EnvironmentObject private var categoryManager: CategoryManager
+    
     let columns = [
         GridItem(.adaptive(minimum: 80), spacing: 10)
     ]
@@ -116,6 +118,8 @@ struct HeaderDetailView: View {
             
             ScrollView {
                 VStack(spacing: 16) {
+                    // TODO: 改成使用 categoryManager 去顯示
+                    
                     ForEach(0 ..< SamplePetCafes.count, id: \.self) { index in
                         CafeInfoCardView(cafeObj: SamplePetCafes[index])
                     }
