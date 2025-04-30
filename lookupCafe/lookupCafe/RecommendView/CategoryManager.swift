@@ -105,31 +105,11 @@ class CategoryManager: ObservableObject {
     
 }
 
-// TODO: 更改obj data的長相，去服好＝和要印出的話面的資料格式
-/**
- struct CafeInfoObject {
-     var shopName: String
-     var city: String
-     var district: String
-     var address: String
-     var phoneNumber: String
-     
-     // 評論等使用者點入之後再把資料抽出來，或者直接再用一次google API
-     var rating: Int
-     var services: [Bool]
-     
-     // 關鍵字
-     var types: [String]
-     
-     // 營業時間
-     var weekdayText: [String]
- }
- */
 class Categoryobjc: ObservableObject {
     @Published var categoryName: String
     
     /**
-    參考：
+     參考：
      print("shop name: \(cafeData.documentID)")
      print("try address")
      print(cafeData.data()["formatted_address"] ?? "nothing")
@@ -141,25 +121,41 @@ class Categoryobjc: ObservableObject {
      */
     @Published var data: [[String : Any]]
     
+    @Published var cleanCafeData: [CafeInfoObject]
+    
     init(categoryName: String, data: [[String : Any]]) {
         self.categoryName = categoryName
         self.data = data
+        self.cleanCafeData = []
+        
+        // 賦值
+        self.cleanCafeData = makeCleanData()
     }
     
-    private func lookUpFilter(filter: [String]) {
-        print("no")
-    }
-    
-    /**
-     keys: ["city", "formatted_address", "rating", "updatedAt", "formatted_phone_number", "district", "name", "reviews", "user_rating_total", "weekday_text", "types", "createdAt", "vicinity", "services"]
-     cafes 可以直接以字串取值
-     */
-    func checkData() {
+    func makeCleanData() -> [CafeInfoObject] {
         print("start to check data")
-        for cafes in self.data {
-            print("cafe keys: \(cafes.keys)")
-            print("cafe address: \(String(describing: cafes["formatted_address"]))")
+        
+        var cafeInfoObjList: [CafeInfoObject] = []
+        
+        for cafe in self.data {
+            print("cafe keys: \(cafe.keys)")
+            print("cafe address: \(String(describing: cafe["formatted_address"]))")
+            
+            var cleanCafeInfoObjc = CafeInfoObject(
+                shopName: cafe["name"] as! String,
+                city: cafe["city"] as! String,
+                district: cafe["district"] as! String,
+                address: cafe["formatted_address"] as! String,
+                phoneNumber: cafe["formatted_phone_number"] as! String,
+                rating: cafe["rating"] as! Int,
+                services: cafe["services"] as! [Bool],
+                types: cafe["types"] as! [String],
+                weekdayText: cafe["weekday_text"] as! [String])
+            
+            cafeInfoObjList.append(cleanCafeInfoObjc)
         }
+                
+        return cafeInfoObjList
     }
 }
 

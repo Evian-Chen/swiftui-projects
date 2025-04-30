@@ -120,9 +120,13 @@ struct HeaderDetailView: View {
                 VStack(spacing: 16) {
                     // TODO: 改成使用 categoryManager 去顯示
                     
-                    ForEach(0 ..< SamplePetCafes.count, id: \.self) { index in
-                        CafeInfoCardView(cafeObj: SamplePetCafes[index])
+                    ForEach(categoryManager.categoryObjcList[categoryName]!.cleanCafeData, id: \.self) { cafeObj in
+                        CafeInfoCardView(cafeObj: cafeObj)
                     }
+                    
+//                    ForEach(0 ..< SamplePetCafes.count, id: \.self) { index in
+//                        CafeInfoCardView(cafeObj: SamplePetCafes[index])
+//                    }
                 }
                 .padding(.top)
             }
