@@ -45,7 +45,7 @@ class CategoryManager: ObservableObject {
         
         for category in self.categories {
             // 製作該分類的物件
-            var categoryObjc = Categoryobjc(categoryName: category, data: [])
+            let categoryObjc = Categoryobjc(categoryName: category, data: [])
             
             do {
                 // categoryData 是 QuerySnapshot
@@ -78,6 +78,7 @@ class CategoryManager: ObservableObject {
             }
             
             // 將該分類的物件加入物件陣列
+            categoryObjc.makeCleanData()
             result[category] = categoryObjc
         }
         
@@ -127,111 +128,39 @@ class Categoryobjc: ObservableObject {
         self.categoryName = categoryName
         self.data = data
         self.cleanCafeData = []
-        
-        // 賦值
-        self.cleanCafeData = makeCleanData()
     }
     
-    func makeCleanData() -> [CafeInfoObject] {
+    func makeCleanData(){
         print("start to check data")
         
         var cafeInfoObjList: [CafeInfoObject] = []
         
         for cafe in self.data {
-            print("cafe keys: \(cafe.keys)")
-            print("cafe address: \(String(describing: cafe["formatted_address"]))")
+            let servicesDict = cafe["services"] as? [String: Bool] ?? [:]
+            let servicesArray = [
+                servicesDict["serves_beer"] ?? false,
+                servicesDict["serves_breakfast"] ?? false,
+                servicesDict["serves_brunch"] ?? false,
+                servicesDict["serves_dinner"] ?? false,
+                servicesDict["serves_lunch"] ?? false,
+                servicesDict["serves_wine"] ?? false,
+                servicesDict["takeout"] ?? false
+            ]
             
             var cleanCafeInfoObjc = CafeInfoObject(
                 shopName: cafe["name"] as! String,
                 city: cafe["city"] as! String,
                 district: cafe["district"] as! String,
                 address: cafe["formatted_address"] as! String,
-                phoneNumber: cafe["formatted_phone_number"] as! String,
-                rating: cafe["rating"] as! Int,
-                services: cafe["services"] as! [Bool],
+                phoneNumber: cafe["formatted_phone_number"] as? String ?? "no phone number avaliable",
+                rating: (cafe["rating"] as? NSNumber)?.intValue ?? 0,
+                services: servicesArray,
                 types: cafe["types"] as! [String],
-                weekdayText: cafe["weekday_text"] as! [String])
+                weekdayText: cafe["weekday_text"] as? [String] ?? ["no business hours avaliable"])
             
             cafeInfoObjList.append(cleanCafeInfoObjc)
         }
-                
-        return cafeInfoObjList
+        self.cleanCafeData = cafeInfoObjList
     }
 }
 
-
-/**
- firestore讀出來的東西如下
- 
- shop name: Cafe'Zwischen咖啡之間_ChIJI5cd04sxaTQRz_HRKza5If4
- decoded data:
- {
-   "district" : "南投市",
-   "rating" : 4.7999999999999998,
-   "formatted_phone_number" : "0983 930 923",
-   "formatted_address" : "540台灣南投縣南投市民權街204號",
-   "name" : "Cafe' Zwischen 咖啡之間",
-   "vicinity" : "",
-   "createdAt" : "2025-03-11T08:24:12.991Z",
-   "updatedAt" : "2025-03-11T08:24:12.991Z",
-   "user_rating_total" : 0,
-   "services" : {
-     "serves_dinner" : false,
-     "serves_breakfast" : false,
-     "serves_beer" : false,
-     "takeout" : false,
-     "serves_brunch" : false,
-     "serves_lunch" : false,
-     "serves_wine" : false
-   },
-   "types" : [
-     "cafe",
-     "point_of_interest",
-     "food",
-     "establishment"
-   ],
-   "weekday_text" : [
-     "not provided"
-   ],
-   "city" : "南投縣",
-   "reviews" : [
-     {
-       "review_time" : "2 週前",
-       "_id" : "67cff32c8e6f78e5061e6b8f",
-       "reviewer_name" : "張培森",
-       "reviewer_rating" : 5,
-       "review_text" : "吃完意麵拐個弯來假日營業的不錯咖啡店，喝杯年輕店主的温醇拿鐵，快意舒服！"
-     },
-     {
-       "review_time" : "1 個月前",
-       "_id" : "67cff32c8e6f78e5061e6b90",
-       "reviewer_name" : "YuXuan Zhao",
-       "reviewer_rating" : 5,
-       "review_text" : "很多豆子可以選，重點價格很佛系！ CP值超高 推推"
-     },
-     {
-       "review_time" : "6 個月前",
-       "_id" : "67cff32c8e6f78e5061e6b91",
-       "reviewer_name" : "bbb612",
-       "reviewer_rating" : 5,
-       "review_text" : "只開假日的轉角咖啡，Linepay可，氣氛舒適。 拿鐵的牛奶超濃郁，出杯是漂亮的漸層。 手沖有很多支豆子可以選，同時能喝到冰跟熱的風味，超有水準的咖啡竟然還是佛心價，瘋掉，值得特地過來喝一杯！"
-     },
-     {
-       "review_time" : "3 年前",
-       "_id" : "67cff32c8e6f78e5061e6b92",
-       "reviewer_name" : "王品儒",
-       "reviewer_rating" : 5,
-       "review_text" : "在南投街巷間 的轉角咖啡廳 感覺是在自家樓下的騎樓 空間設計的十分舒服 有許多的花草擺設隔絕了相鄰的道路 同時 也可以享受照映進的太陽 雖然空間不大 卻不感到擁擠 店裡還播著音樂 真的很愜意☻ #百慕達烤吐司 烤到剛剛好的脆度 配上小塊奶油 跟黑咖啡完美搭配☕️ 黑咖啡$60 烤土司$30"
-     },
-     {
-       "review_time" : "3 年前",
-       "_id" : "67cff32c8e6f78e5061e6b93",
-       "reviewer_name" : "ying",
-       "reviewer_rating" : 5,
-       "review_text" : "南投巷弄轉角六日限定咖啡 手沖很讚～ 可以告訴老闆想要什麼味道的咖啡 也可以自己選擇 冰磚拿鐵慢慢化掉釋放的咖啡很濃郁 老闆跟板娘很熱情親切"
-     }
-   ]
- }
- 
- 
- */

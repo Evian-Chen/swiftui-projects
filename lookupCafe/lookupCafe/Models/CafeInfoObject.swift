@@ -5,8 +5,12 @@
 //  Created by mac03 on 2025/4/21.
 //
 
+import Foundation
+
 // 這個struct包含了要顯示出的咖啡廳的重要資訊
-struct CafeInfoObject {
+struct CafeInfoObject: Identifiable {
+    var id = UUID()  // no need to add \.self when ForEach
+    
     var shopName: String
     var city: String
     var district: String

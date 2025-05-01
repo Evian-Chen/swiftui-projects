@@ -34,6 +34,34 @@ struct ContentView: View {
     @Query(sort: [SortDescriptor(\Book.title)]) var books: [Book]
     
     @State private var showingAddScreen = false
+    @State private var sortType = SortType.title
+    
+    enum SortType {
+        case title, author, rating
+    }
+    
+    var filterBooks: [Book] {
+        if searchText.isEmpty {
+            return sortedBook
+        } else {
+            return sortedBook.filter { book in
+                book.title.localizedStandardContains(searchText) ||
+                book.author.localizedStandardContains(searchText)
+            }
+        }
+    }
+    
+    var sortedBook: [Book] {
+        switch sortType {
+        case .title:
+            return books.sorted { $0.title < $1.title }
+            
+        case .author:
+            return books.sorted { $0.author < $1.author }
+        case .rating:
+            return books.sorted { $0.rating < $1.rating }
+        }
+    }
     
     var body: some View {
         Text(String(books.count))
@@ -61,8 +89,44 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button {
+                            sortType = .title
+                        } label: {
+                            Label("Title", systemImage: "textformat")
+                        }
+                        Button {
+                            sortType = .author
+                        } label: {
+                            Label("Author", systemImage: "person")
+                        }
+                        Button {
+                            sortType = .rating
+                        } label: {
+                            Label("Rating", systemImage: "star")
+                        }
+                    } label: {
+                        Image("arrow.up.arrow.down")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("Add book", systemImage: "plus") {
                         showingAddScreen.toggle()
+                    }
+                }
+                List {
+                    if books.isEmpty {
+                        Text("there's no book yet")
+                            .foregroundStyle(.secondary)
+                            .padding()
+                    } else if filterBooks.isEmpty {
+                        Text("no result")
+                            .foregroundStyle(.secondary)
+                            .padding()
+                    } else {
+                        ForEach(filterBooks) { book in
+                            
+                        }
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
