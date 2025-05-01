@@ -24,15 +24,6 @@ struct RecommendView: View {
     }
 }
 
-
-struct CafeDetailView: View {
-    var cafeObj: CafeInfoObject
-    
-    var body: some View {
-        Text(cafeObj.shopName).font(.title)
-    }
-}
-
 #Preview {
     RecommendView()
 }
