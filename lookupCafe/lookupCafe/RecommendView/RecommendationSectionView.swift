@@ -18,7 +18,7 @@ struct RecommendationSectionView: View {
                 CafeInfoCardView(cafeObj: sampleCafes[index])
             }
         } header: {
-            SectionHeaderView(categoryText: category.title)
+            SectionHeaderView(category: category)
         }
     }
 }

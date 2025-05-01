@@ -9,7 +9,7 @@ import SwiftUI
 
 // 點進去之後出現該分類的每一間咖啡廳
 struct HeaderDetailView: View {
-    var categoryName: String
+    var category: RecommendationCategory
     @State private var showingSheetFilter = false
     @State var curFilterQuery: FilterQuery = FilterQuery()
     @State private var searchText = ""
@@ -118,19 +118,25 @@ struct HeaderDetailView: View {
             
             ScrollView {
                 VStack(spacing: 16) {
-                    // TODO: 改成使用 categoryManager 去顯示
-                    
-                    ForEach(categoryManager.categoryObjcList[categoryName]!.cleanCafeData) { cafeObj in
-                        CafeInfoCardView(cafeObj: cafeObj)
+                    if categoryManager.isLoaded {
+                        if let categoryObj = categoryManager.categoryObjcList[category.rawValue] {
+                            ForEach(categoryObj.cleanCafeData) { cafeObj in
+                                CafeInfoCardView(cafeObj: cafeObj)
+                            }
+                        } else {
+                            Text("找不到該分類資料")
+                        }
+                    } else {
+                        ProgressView("正在載入資料...")
                     }
-                    
-//                    ForEach(0 ..< SamplePetCafes.count, id: \.self) { index in
-//                        CafeInfoCardView(cafeObj: SamplePetCafes[index])
-//                    }
                 }
                 .padding(.top)
             }
-            .navigationTitle("這裡是 \(categoryName)")
+            .onAppear {
+                print("🪵 categoryName: \(category.rawValue)")
+                print("🪵 所有 keys: \(categoryManager.categoryObjcList.keys)")
+            }
+            .navigationTitle("這裡是 \(category.title)")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -144,6 +150,7 @@ struct HeaderDetailView: View {
             .sheet(isPresented: $showingSheetFilter) {
                 FilterView(curFilterQuery: $curFilterQuery, isPrestend: $showingSheetFilter)
             }
+            
         }
     }
 }

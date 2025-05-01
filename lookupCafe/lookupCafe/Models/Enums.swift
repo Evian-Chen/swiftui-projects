@@ -79,6 +79,10 @@ enum RecommendationCategory: String {
             return "熱門咖啡廳"
         }
     }
+    
+    var englishCategoryName: String {
+        return self.rawValue
+    }
 }
 
 // MARK: - ProfileData

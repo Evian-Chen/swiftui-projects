@@ -9,12 +9,12 @@ import SwiftUI
 
 // 定義每個header的外觀
 struct SectionHeaderView: View {
-    var categoryText: String
+    var category: RecommendationCategory
     
     var body: some View {
-        NavigationLink(destination: HeaderDetailView(categoryName: categoryText)) {
+        NavigationLink(destination: HeaderDetailView(category: category)) {
             HStack {
-                Text(categoryText)
+                Text(category.title)
                     .font(.title3)
                     .bold()
                     .foregroundColor(.white)

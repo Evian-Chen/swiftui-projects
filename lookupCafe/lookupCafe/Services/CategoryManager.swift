@@ -10,65 +10,61 @@ import FirebaseFirestore
 
 class FirestoreManager {
     @Published var db: Firestore
-    
+
     init() {
         self.db = Firestore.firestore()
     }
 }
 
 class CategoryManager: ObservableObject {
-    // 每個對應的類別名稱，裡面都有一個那個分類的物件
     @Published var categoryObjcList: [String: Categoryobjc]
     @Published var categories: [String]
-    
-    let categoryFile = "../Preview Content/categoryList.txt"
-    
-    // 管理整個firestore的物件
+    @Published var isLoaded = false
+
+    let categoryFile = "categoryList"
     private var fsManager = FirestoreManager()
     private var locManager = LocationDataManager()
-    
+
     init() {
         self.categoryObjcList = [:]
         self.categories = []
     }
-    
+
+    @MainActor
     func asyncInit() async {
-        // 賦值
         self.categories = readInCategories()
         self.categoryObjcList = await loadCategoryData()
+        self.isLoaded = true
     }
-    
-    // loop through self.categories 裡面所有的類別，將其存到一個obj list
-    private func loadCategoryData() async -> [String: Categoryobjc] {
-        var result: [String: Categoryobjc] = [:]
-        var categoryData: QuerySnapshot? = nil
-        
-        for category in self.categories {
-            // 製作該分類的物件
-            let categoryObjc = Categoryobjc(categoryName: category, data: [])
-            
-            do {
-                // categoryData 是 QuerySnapshot
-                categoryData = try await fsManager.db.collection(category).getDocuments()
 
+
+    private func loadCategoryData() async -> [String: Categoryobjc] {
+        print("loading category data")
+        var result: [String: Categoryobjc] = [:]
+        print(self.categories)
+
+        for category in self.categories {
+            let categoryObjc = Categoryobjc(categoryName: category, data: [])
+
+            do {
+                let categoryData = try await fsManager.db.collection(category).getDocuments()
                 print("load in data, fetch from: \(category)")
-                
-                for cityDoc in categoryData!.documents {
+
+                for cityDoc in categoryData.documents {
                     let city = cityDoc.documentID
-                    
-                    // 檢查該行政區有在該城市內
+                    print("cur city: \(city)")
                     guard let districts = locManager.cityDistricts[city] else {
                         print("\(city) not exists")
                         continue
                     }
-                    
-                    //
+
                     for district in districts {
+                        print("cur district: \(district)")
                         let districtRef = cityDoc.reference.collection(district)
                         let cafeDoc = try await districtRef.getDocuments()
-                        
-                        // cafeData.data() 可叫出單筆的咖啡廳資料
+
                         for cafeData in cafeDoc.documents {
+                            // 更新 data 也應該在主執行緒做，但暫時先收集再傳
                             categoryObjc.data.append(cafeData.data())
                         }
                     }
@@ -77,64 +73,52 @@ class CategoryManager: ObservableObject {
                 print("error getting document: \(error)")
             }
             
+            print("line 75 try to make clean data")
+
             // 將該分類的物件加入物件陣列
-            categoryObjc.makeCleanData()
+            await MainActor.run {
+                categoryObjc.makeCleanData()
+            }
             result[category] = categoryObjc
+
         }
-        
+
         return result
     }
-    
-    // 讀取txt檔案中所有的分類名稱（資料庫的）
+
     private func readInCategories() -> [String] {
+        print("read in categories")
+        print(categoryFile)
         if let file = Bundle.main.url(forResource: categoryFile, withExtension: "txt") {
             do {
                 let data = try String(contentsOf: file, encoding: .utf8)
                 let lines = data.split(separator: "\n")
-                return lines.map {String($0)}
+                print(lines)
+                return lines.map { String($0) }
             } catch {
                 print("reading categoryFile error: \(error)")
             }
         }
-        return []
+        return ["no shit"]
     }
-    
-    private func findAllCategory() {
-        return
-    }
-    
-    
 }
 
 class Categoryobjc: ObservableObject {
     @Published var categoryName: String
-    
-    /**
-     參考：
-     print("shop name: \(cafeData.documentID)")
-     print("try address")
-     print(cafeData.data()["formatted_address"] ?? "nothing")
-     
-     被呼叫時加入的是cafeData.data()
-     cafeData.documentID是String
-     cafeData.data()是Any
-     []可以直接對資料取值
-     */
-    @Published var data: [[String : Any]]
-    
+    @Published var data: [[String: Any]]
     @Published var cleanCafeData: [CafeInfoObject]
-    
-    init(categoryName: String, data: [[String : Any]]) {
+
+    init(categoryName: String, data: [[String: Any]]) {
         self.categoryName = categoryName
         self.data = data
         self.cleanCafeData = []
     }
-    
-    func makeCleanData(){
+
+    func makeCleanData() {
         print("start to check data")
-        
+
         var cafeInfoObjList: [CafeInfoObject] = []
-        
+
         for cafe in self.data {
             let servicesDict = cafe["services"] as? [String: Bool] ?? [:]
             let servicesArray = [
@@ -146,21 +130,26 @@ class Categoryobjc: ObservableObject {
                 servicesDict["serves_wine"] ?? false,
                 servicesDict["takeout"] ?? false
             ]
-            
-            var cleanCafeInfoObjc = CafeInfoObject(
-                shopName: cafe["name"] as! String,
-                city: cafe["city"] as! String,
-                district: cafe["district"] as! String,
-                address: cafe["formatted_address"] as! String,
-                phoneNumber: cafe["formatted_phone_number"] as? String ?? "no phone number avaliable",
+
+            let cleanCafeInfoObjc = CafeInfoObject(
+                shopName: cafe["name"] as? String ?? "未知店名",
+                city: cafe["city"] as? String ?? "未知城市",
+                district: cafe["district"] as? String ?? "未知區域",
+                address: cafe["formatted_address"] as? String ?? "未知地址",
+                phoneNumber: cafe["formatted_phone_number"] as? String ?? "未提供電話",
                 rating: (cafe["rating"] as? NSNumber)?.intValue ?? 0,
                 services: servicesArray,
-                types: cafe["types"] as! [String],
-                weekdayText: cafe["weekday_text"] as? [String] ?? ["no business hours avaliable"])
-            
+                types: cafe["types"] as? [String] ?? [],
+                weekdayText: cafe["weekday_text"] as? [String] ?? ["no business hours available"]
+            )
+
             cafeInfoObjList.append(cleanCafeInfoObjc)
+            print("obj: \(cleanCafeInfoObjc)")
         }
-        self.cleanCafeData = cafeInfoObjList
+
+        // 主執行緒設定 Published 屬性
+        DispatchQueue.main.async {
+            self.cleanCafeData = cafeInfoObjList
+        }
     }
 }
-
