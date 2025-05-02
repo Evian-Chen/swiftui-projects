@@ -140,7 +140,10 @@ class Categoryobjc: ObservableObject {
                 rating: (cafe["rating"] as? NSNumber)?.intValue ?? 0,
                 services: servicesArray,
                 types: cafe["types"] as? [String] ?? [],
-                weekdayText: cafe["weekday_text"] as? [String] ?? ["no business hours available"]
+                weekdayText: cafe["weekday_text"] as? [String] ?? ["no business hours available"],
+                
+                // TODO: add comment
+                comments: "測試用"
             )
 
             cafeInfoObjList.append(cleanCafeInfoObjc)

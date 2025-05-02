@@ -26,4 +26,6 @@ struct CafeInfoObject: Identifiable {
     
     // 營業時間
     var weekdayText: [String]
+    
+    var comments: String
 }
