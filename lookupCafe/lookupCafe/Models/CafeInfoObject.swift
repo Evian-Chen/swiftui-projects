@@ -27,5 +27,14 @@ struct CafeInfoObject: Identifiable {
     // 營業時間
     var weekdayText: [String]
     
-    var comments: String
+    var reviews: [Review]?
+}
+
+struct Review: Identifiable {
+    var id = UUID()
+    
+    var review_time: String
+    var reviewer_name: String
+    var reviewer_rating: Int
+    var reviewer_text: String
 }

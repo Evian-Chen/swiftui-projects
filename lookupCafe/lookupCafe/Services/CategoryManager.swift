@@ -143,7 +143,7 @@ class Categoryobjc: ObservableObject {
                 weekdayText: cafe["weekday_text"] as? [String] ?? ["no business hours available"],
                 
                 // TODO: add comment
-                comments: "測試用"
+                reviews: nil
             )
 
             cafeInfoObjList.append(cleanCafeInfoObjc)
