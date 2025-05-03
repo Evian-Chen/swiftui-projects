@@ -187,21 +187,21 @@ struct CafeDetailView: View {
     }
 }
 
-#Preview {
-    CafeDetailView(cafeObj: CafeInfoObject(
-        shopName: "Daily Beans",
-        city: "台北市",
-        district: "信義區",
-        address: "松山路10巷5號",
-        phoneNumber: "02-5566-7788",
-        rating: 4,
-        services: [true, false, true, true, true, true, true],
-        types: ["hipster", "instagrammable", "brunch"],
-        weekdayText: ["週一至週五: 09:00–17:00", "週末公休"],
-        reviews: [
-            Review(review_time: "2025-04-06", reviewer_name: "Jack", reviewer_rating: 3, reviewer_text: "非常適合打卡拍照的早午餐店。")
-        ]
-    )
-    )
-}
+//#Preview {
+//    CafeDetailView(cafeObj: CafeInfoObject(
+//        shopName: "Daily Beans",
+//        city: "台北市",
+//        district: "信義區",
+//        address: "松山路10巷5號",
+//        phoneNumber: "02-5566-7788",
+//        rating: 4,
+//        services: [true, false, true, true, true, true, true],
+//        types: ["hipster", "instagrammable", "brunch"],
+//        weekdayText: ["週一至週五: 09:00–17:00", "週末公休"],
+//        reviews: [
+//            Review(review_time: "2025-04-06", reviewer_name: "Jack", reviewer_rating: 3, reviewer_text: "非常適合打卡拍照的早午餐店。")
+//        ]
+//    )
+//    )
+//}
 

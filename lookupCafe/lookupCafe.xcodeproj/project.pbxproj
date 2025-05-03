@@ -14,6 +14,7 @@
 		D85C35182DA134F300A9DF5D /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D85C35172DA134F300A9DF5D /* FirebaseStorage */; };
 		D86D6E6C2DB76CC900A69E75 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = D86D6E6B2DB76CC900A69E75 /* GoogleSignIn */; };
 		D86D6E6E2DB76CC900A69E75 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D86D6E6D2DB76CC900A69E75 /* GoogleSignInSwift */; };
+		D8FE0D3E2DC642ED0066EEB2 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = D8FE0D3D2DC642ED0066EEB2 /* GoogleMaps */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8FE0D3E2DC642ED0066EEB2 /* GoogleMaps in Frameworks */,
 				D85C35142DA134F300A9DF5D /* FirebaseDatabase in Frameworks */,
 				D85C35162DA134F300A9DF5D /* FirebaseFirestore in Frameworks */,
 				D86D6E6E2DB76CC900A69E75 /* GoogleSignInSwift in Frameworks */,
@@ -113,6 +115,7 @@
 				D85C35172DA134F300A9DF5D /* FirebaseStorage */,
 				D86D6E6B2DB76CC900A69E75 /* GoogleSignIn */,
 				D86D6E6D2DB76CC900A69E75 /* GoogleSignInSwift */,
+				D8FE0D3D2DC642ED0066EEB2 /* GoogleMaps */,
 			);
 			productName = lookupCafe;
 			productReference = D8445A2A2DA61CB5002E6B06 /* lookupCafe.app */;
@@ -169,6 +172,7 @@
 			packageReferences = (
 				D85C350E2DA134F300A9DF5D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				D86D6E6A2DB76CC900A69E75 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				D8FE0D3C2DC642ED0066EEB2 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D85C34F02D9FD9D400A9DF5D;
@@ -484,6 +488,14 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		D8FE0D3C2DC642ED0066EEB2 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -521,6 +533,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D86D6E6A2DB76CC900A69E75 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		D8FE0D3D2DC642ED0066EEB2 /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D8FE0D3C2DC642ED0066EEB2 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
