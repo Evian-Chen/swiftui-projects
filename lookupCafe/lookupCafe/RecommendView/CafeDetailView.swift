@@ -25,13 +25,13 @@ struct CafeDetailView: View {
     /**
      參考有哪些服務
      let servicesArray = [
-         servicesDict["serves_beer"] ?? false,
-         servicesDict["serves_breakfast"] ?? false,
-         servicesDict["serves_brunch"] ?? false,
-         servicesDict["serves_dinner"] ?? false,
-         servicesDict["serves_lunch"] ?? false,
-         servicesDict["serves_wine"] ?? false,
-         servicesDict["takeout"] ?? false
+     servicesDict["serves_beer"] ?? false,
+     servicesDict["serves_breakfast"] ?? false,
+     servicesDict["serves_brunch"] ?? false,
+     servicesDict["serves_dinner"] ?? false,
+     servicesDict["serves_lunch"] ?? false,
+     servicesDict["serves_wine"] ?? false,
+     servicesDict["takeout"] ?? false
      ]
      */
     @ViewBuilder
@@ -125,17 +125,31 @@ struct CafeDetailView: View {
     @ViewBuilder
     func reviewCard() -> some View {
         if let reviews = cafeObj.reviews {
-            ForEach(reviews) { review in
-                HStack {
-                    Text(review.reviewer_name).font(.headline)
-                    ForEach(0 ..< 3) { _ in
+            ForEach(reviews.indices, id: \.self) { index in
+                let review = reviews[index]
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack {
+                        Text(review.reviewer_name).font(.title).bold()
+                        Text(String(review.reviewer_rating)).font(.title)
                         Image(systemName: "star")
+                        
+                        Spacer()
+                        
+                        Text(review.review_time)
                     }
+                    
+                    Text(review.reviewer_text).font(.subheadline)
                 }
+                .padding()
+                .background(.gray.opacity(0.1))
+                .cornerRadius(12)
+                
+                
             }
         } else {
-            Text("no reviews yet")
+            Text("No reviews yet")
         }
+        
     }
     
     var body: some View {
@@ -156,13 +170,18 @@ struct CafeDetailView: View {
             
             // 有什麼樣的服務，參考 app store
             serviceIcon()
+            
+            padding()
+            
             // map view
             
             // 一條灰色的橫線
+            Divider()
             
             // 評論
             Text("Reviews").bold().font(.title)
             reviewCard()
+                
         }
         .padding(.horizontal, 20)
     }
@@ -176,12 +195,13 @@ struct CafeDetailView: View {
         address: "松山路10巷5號",
         phoneNumber: "02-5566-7788",
         rating: 4,
-        services: [true, false, true],
+        services: [true, false, true, true, true, true, true],
         types: ["hipster", "instagrammable", "brunch"],
         weekdayText: ["週一至週五: 09:00–17:00", "週末公休"],
         reviews: [
             Review(review_time: "2025-04-06", reviewer_name: "Jack", reviewer_rating: 3, reviewer_text: "非常適合打卡拍照的早午餐店。")
-        ])
+        ]
+    )
     )
 }
 
