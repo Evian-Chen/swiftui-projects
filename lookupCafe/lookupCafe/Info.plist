@@ -4,10 +4,6 @@
 <dict>
 	<key>GMSApiKey</key>
 	<string>AIzaSyDPnGaTgfWf8jpzKkNFBuaVheFEY43QAvQ</string>
-	<key>NSAppTransportSecurity</key>
-	<dict/>
-	<key>Allow Arbitrary Loads</key>
-	<string>YES</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

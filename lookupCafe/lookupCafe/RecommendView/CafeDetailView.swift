@@ -143,8 +143,6 @@ struct CafeDetailView: View {
                 .padding()
                 .background(.gray.opacity(0.1))
                 .cornerRadius(12)
-                
-                
             }
         } else {
             Text("No reviews yet")
@@ -170,9 +168,8 @@ struct CafeDetailView: View {
             
             // 有什麼樣的服務，參考 app store
             serviceIcon()
-            
-            padding()
-            
+                .padding(.vertical)
+                        
             // map view
             
             // 一條灰色的橫線
@@ -187,21 +184,18 @@ struct CafeDetailView: View {
     }
 }
 
-//#Preview {
-//    CafeDetailView(cafeObj: CafeInfoObject(
-//        shopName: "Daily Beans",
-//        city: "台北市",
-//        district: "信義區",
-//        address: "松山路10巷5號",
-//        phoneNumber: "02-5566-7788",
-//        rating: 4,
-//        services: [true, false, true, true, true, true, true],
-//        types: ["hipster", "instagrammable", "brunch"],
-//        weekdayText: ["週一至週五: 09:00–17:00", "週末公休"],
-//        reviews: [
-//            Review(review_time: "2025-04-06", reviewer_name: "Jack", reviewer_rating: 3, reviewer_text: "非常適合打卡拍照的早午餐店。")
-//        ]
-//    )
-//    )
-//}
+#Preview {
+    CafeDetailView(cafeObj: CafeInfoObject(
+        shopName: "Test Cafe",
+        city: "台北市",
+        district: "中正區",
+        address: "信義路一段1號",
+        phoneNumber: "02-0000-0000",
+        rating: 4,
+        services: Array(repeating: false, count: 7),
+        types: [],
+        weekdayText: [],
+        reviews: nil
+    ))
+}
 

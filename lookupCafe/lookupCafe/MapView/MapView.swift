@@ -8,6 +8,33 @@
 import SwiftUI
 import GoogleMaps
 
+struct GMSMapsView: UIViewRepresentable {
+    func makeUIView(context: Context) -> GMSMapView {
+        let camera = GMSCameraPosition.camera(
+            withLatitude: 25.034012,  // 台北101
+            longitude: 121.564461,
+            zoom: 15
+        )
+        let mapView = GMSMapView(frame: .zero)
+        mapView.camera = camera
+
+        // 加一個 marker 做示範
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: 25.034012, longitude: 121.564461)
+        marker.title = "Taipei 101"
+        marker.snippet = "台北市信義區"
+        marker.map = mapView
+
+        return mapView
+    }
+
+    func updateUIView(_ uiView: GMSMapView, context: Context) {
+        // 這裡暫時不需要寫
+    }
+}
+
+
+
 struct MapView: View {
     @EnvironmentObject var locationManager: LocationDataManager
     
@@ -16,8 +43,11 @@ struct MapView: View {
     
     var body: some View {
         ZStack {
-//            Color.white.ignoresSafeArea()
-            GoogleMapsView()
+            //            Color.white.ignoresSafeArea()
+            GMSMapsView()
+                .frame(height: 300)  // 自訂顯示高度
+                .cornerRadius(12)
+                .padding()
             
             VStack {
                 HStack {
@@ -49,29 +79,3 @@ struct MapView: View {
         }
     }
 }
-
-struct GoogleMapsView: UIViewRepresentable {
-    func makeUIView(context: Context) -> GMSMapView {
-        print("makeUIView called")
-
-        let camera = GMSCameraPosition.camera(withLatitude: 25.034012, longitude: 121.564461, zoom: 16)
-        let options = GMSMapViewOptions()
-        options.camera = camera
-
-        let mapView = GMSMapView.init(options: options)
-
-        // Marker
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: 25.034012, longitude: 121.564461)
-        marker.title = "Taipei 101"
-        marker.snippet = "台北市信義區"
-        marker.map = mapView
-        return mapView
-    }
-
-    func updateUIView(_ uiView: GMSMapView, context: Context) {}
-}
-
-//#Preview {
-//    ContentView()
-//}

@@ -36,17 +36,46 @@
 		D86D6E722DB77EB700A69E75 /* Exceptions for "lookupCafe" folder in "lookupCafe" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				.swift,
 				Info.plist,
+				MapView/GMSMapsView.swift,
 			);
 			target = D85C34F82D9FD9D400A9DF5D /* lookupCafe */;
 		};
+		D8BA58EC2DC7BF2700B08882 /* Exceptions for "lookupCafe" folder in "lookupCafeTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"GoogleService-Info.plist",
+			);
+			target = D8A0ADBB2DBFE9CC00CA5BA3 /* lookupCafeTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		D8BA58F12DC7C32E00B08882 /* Exceptions for "lookupCafe" folder in "Compile Sources" phase from "lookupCafe" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = D85C34F52D9FD9D400A9DF5D /* Sources */;
+			membershipExceptions = (
+				.swift,
+			);
+		};
+		D8BA58F22DC7C33E00B08882 /* Exceptions for "lookupCafe" folder in "Copy Bundle Resources" phase from "lookupCafe" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = D85C34F72D9FD9D400A9DF5D /* Resources */;
+			membershipExceptions = (
+				MapView/GMSMapsView.swift,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D85C34FB2D9FD9D400A9DF5D /* lookupCafe */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				D86D6E722DB77EB700A69E75 /* Exceptions for "lookupCafe" folder in "lookupCafe" target */,
+				D8BA58F12DC7C32E00B08882 /* Exceptions for "lookupCafe" folder in "Compile Sources" phase from "lookupCafe" target */,
+				D8BA58F22DC7C33E00B08882 /* Exceptions for "lookupCafe" folder in "Copy Bundle Resources" phase from "lookupCafe" target */,
+				D8BA58EC2DC7BF2700B08882 /* Exceptions for "lookupCafe" folder in "lookupCafeTests" target */,
 			);
 			path = lookupCafe;
 			sourceTree = "<group>";
