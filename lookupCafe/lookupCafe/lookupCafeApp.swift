@@ -13,6 +13,8 @@ import GoogleSignIn
 
 @main
 struct lookupCafeApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+
     init() {
         FirebaseApp.configure()
     }
