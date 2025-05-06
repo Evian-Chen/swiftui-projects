@@ -20,6 +20,7 @@ struct CafeMapPreviewView: UIViewRepresentable {
             CLGeocoder().geocodeAddressString(address) { placemarks, error in
                 guard let placemark = placemarks?[0], error == nil else { return }
                 
+                // 更新該咖啡廳的座標
                 DispatchQueue.main.async {
                     let camera = GMSCameraPosition.camera(
                         withTarget: placemark.location!.coordinate,
@@ -53,7 +54,7 @@ struct CafeMapPreviewView: UIViewRepresentable {
         context.coordinator.geocodeAddress(address: address, shopName: shopName)
         return mapView
     }
-        
+    
     func updateUIView(_ uiView: GMSMapView, context: Context) {
         // 這裡暫時不需要寫
     }
@@ -203,62 +204,85 @@ struct CafeDetailView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(cafeObj.shopName).font(.largeTitle).bold()
-                .padding(.vertical)
-            
-            HStack {
-                Image(systemName: "star.fill")
-                Text(String(cafeObj.rating)).bold().font(.title3)
-            }
-            
-            HStack {
-                Text(cafeObj.address)
-                Spacer()
-                Text(cafeObj.phoneNumber)
-            }
-            
-            // 有什麼樣的服務，參考 app store
-            serviceIcon()
-                .padding(.vertical)
-            
-            // map view
-//            CafeMapPreviewView(address: cafeObj.address, shopName: cafeObj.shopName)
-//                .frame(height: 300)  // 自訂顯示高度
-//                .cornerRadius(12)
-//                .padding()
-            Rectangle()
-                .frame(height: 300)  // 自訂顯示高度
-                .cornerRadius(12)
-                .background(.gray)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(cafeObj.shopName)
+                        .font(.largeTitle)
+                        .bold()
+                    
+                    HStack(spacing: 8) {
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                        Text(String(cafeObj.rating))
+                            .bold()
+                            .font(.title3)
+                    }
+                    
+                    HStack {
+                        Label(cafeObj.address, systemImage: "mappin.and.ellipse")
+                            .font(.subheadline)
+                        Spacer()
+                        Label(cafeObj.phoneNumber, systemImage: "phone.fill")
+                            .font(.subheadline)
+                    }
+                }
                 .padding()
-            
-            // 一條灰色的橫線
-            Divider()
-            
-            // 評論
-            Text("Reviews").bold().font(.title)
-            reviewCard()
-            
+                .background(.white)
+                .cornerRadius(12)
+                .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 3)
+                
+                // 服務項目 -> 轉乘viewbuilder以防沒有服務資料
+                VStack(alignment: .leading) {
+                    Text("服務項目")
+                        .font(.title2)
+                        .bold()
+                    serviceIcon()
+                }
+                .padding()
+                .background(.white)
+                .cornerRadius(12)
+                
+                // 🗺️ 地圖預覽
+                CafeMapPreviewView(address: cafeObj.address, shopName: cafeObj.shopName)
+                    .frame(height: 300)
+                    .cornerRadius(12)
+                    .shadow(radius: 4)
+                
+                // 💬 評論
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("評論")
+                        .bold()
+                        .font(.title2)
+                    reviewCard()
+                }
+                .padding()
+                .background(.white)
+                .cornerRadius(12)
+                .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 3)
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical)
+            .background(Color(.systemGroupedBackground))
         }
-        .padding(.horizontal, 20)
     }
+    
 }
 
-#Preview {
-    CafeDetailView(cafeObj: CafeInfoObject(
-        shopName: "Chill Corner Cafe",
-        city: "新竹市",
-        district: "北區",
-        address: "北門街60號",
-        phoneNumber: "03-3456-7890",
-        rating: 3,
-        services: [false, true, false, true, true, true, true],
-        types: ["pet", "casual", "local"],
-        weekdayText: ["每日: 10:00–18:00"],
-        reviews: [
-             Review(review_time: "2025-04-07", reviewer_name: "志強", reviewer_rating: 3, reviewer_text: "本地人常去的小店，寵物友善。")
-        ]
-    ))
-}
-
+//#Preview {
+//    CafeDetailView(cafeObj: CafeInfoObject(
+//        shopName: "Chill Corner Cafe",
+//        city: "新竹市",
+//        district: "北區",
+//        address: "北門街60號",
+//        phoneNumber: "03-3456-7890",
+//        rating: 3,
+//        services: [false, true, false, true, true, true, true],
+//        types: ["pet", "casual", "local"],
+//        weekdayText: ["每日: 10:00–18:00"],
+//        reviews: [
+//             Review(review_time: "2025-04-07", reviewer_name: "志強", reviewer_rating: 3, reviewer_text: "本地人常去的小店，寵物友善。")
+//        ]
+//    ))
+//}
+//
