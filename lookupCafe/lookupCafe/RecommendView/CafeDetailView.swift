@@ -7,30 +7,53 @@
 
 import SwiftUI
 import GoogleMaps
+import MapKit
 
 struct CafeMapPreviewView: UIViewRepresentable {
     var address: String
+    var shopName: String
     
-    func makeUIView(context: Context) -> GMSMapView {
+    class Coordinator {
+        var mapView: GMSMapView?
+        
+        func geocodeAddress(address: String, shopName: String) {
+            CLGeocoder().geocodeAddressString(address) { placemarks, error in
+                guard let placemark = placemarks?[0], error == nil else { return }
+                
+                DispatchQueue.main.async {
+                    let camera = GMSCameraPosition.camera(
+                        withTarget: placemark.location!.coordinate,
+                        zoom: 15
+                    )
+                    self.mapView!.camera = camera
+                    
+                    let marker = GMSMarker()
+                    marker.position = placemark.location!.coordinate
+                    marker.title = shopName
+                    marker.map = self.mapView
+                }
+            }
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator()
+    }
+    
+    func makeUIView(context: Context)-> GMSMapView {
+        // default location
         let camera = GMSCameraPosition.camera(
             withLatitude: 25.034012,  // 台北101
             longitude: 121.564461,
             zoom: 15
         )
         let mapView = GMSMapView(frame: .zero, camera: camera)
-
-        // 加一個 marker 做示範
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: 25.034012, longitude: 121.564461)
-        marker.title = "Taipei 101"
-        marker.snippet = "台北市信義區"
-        marker.map = mapView
-
+        
+        context.coordinator.mapView = mapView
+        context.coordinator.geocodeAddress(address: address, shopName: shopName)
         return mapView
     }
-    
-//    func addr2Coordinat()
-
+        
     func updateUIView(_ uiView: GMSMapView, context: Context) {
         // 這裡暫時不需要寫
     }
@@ -198,8 +221,17 @@ struct CafeDetailView: View {
             // 有什麼樣的服務，參考 app store
             serviceIcon()
                 .padding(.vertical)
-                        
+            
             // map view
+//            CafeMapPreviewView(address: cafeObj.address, shopName: cafeObj.shopName)
+//                .frame(height: 300)  // 自訂顯示高度
+//                .cornerRadius(12)
+//                .padding()
+            Rectangle()
+                .frame(height: 300)  // 自訂顯示高度
+                .cornerRadius(12)
+                .background(.gray)
+                .padding()
             
             // 一條灰色的橫線
             Divider()
@@ -207,7 +239,7 @@ struct CafeDetailView: View {
             // 評論
             Text("Reviews").bold().font(.title)
             reviewCard()
-                
+            
         }
         .padding(.horizontal, 20)
     }
@@ -215,16 +247,18 @@ struct CafeDetailView: View {
 
 #Preview {
     CafeDetailView(cafeObj: CafeInfoObject(
-        shopName: "Test Cafe",
-        city: "台北市",
-        district: "中正區",
-        address: "信義路一段1號",
-        phoneNumber: "02-0000-0000",
-        rating: 4,
-        services: Array(repeating: false, count: 7),
-        types: [],
-        weekdayText: [],
-        reviews: nil
+        shopName: "Chill Corner Cafe",
+        city: "新竹市",
+        district: "北區",
+        address: "北門街60號",
+        phoneNumber: "03-3456-7890",
+        rating: 3,
+        services: [false, true, false, true, true, true, true],
+        types: ["pet", "casual", "local"],
+        weekdayText: ["每日: 10:00–18:00"],
+        reviews: [
+             Review(review_time: "2025-04-07", reviewer_name: "志強", reviewer_rating: 3, reviewer_text: "本地人常去的小店，寵物友善。")
+        ]
     ))
 }
 
