@@ -7,6 +7,7 @@
 
 import FirebaseCore
 import FirebaseAuth
+import FirebaseFirestore
 import GoogleSignIn
 
 class AuthViewModel: ObservableObject {
@@ -50,9 +51,13 @@ class AuthViewModel: ObservableObject {
                     return
                 }
                 
+                // 成功登入
                 DispatchQueue.main.async {
                     self.user = result?.user
                     self.isSignedIn = true
+                    
+                    // load in 目前的登入者的資料庫
+                    self.setupUserDocument()
                 }
             }
             
@@ -67,4 +72,29 @@ class AuthViewModel: ObservableObject {
             print("Error signing out: %@", signOutError)
         }
     } // sign out
+    
+    func setupUserDocument() {
+        guard let user = Auth.auth().currentUser else { return }
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(user.uid)
+        
+        userRef.getDocument { doc, error in
+            if let doc = doc, doc.exists {
+                print("使用者存在，不用新增使用者")
+            } else {
+                let userData: [String: Any] = [
+                    "email": user.email ?? "",
+                    "createdAt": FieldValue.serverTimestamp(),
+                    "favorites": []
+                ]
+                userRef.setData(userData) { error in
+                    if let error = error {
+                        print("插入第一筆使用者資料時出錯：\(error)")
+                    } else {
+                        print("成功插入第一筆使用者資料")
+                    }
+                }
+            }
+        }
+    }
 }

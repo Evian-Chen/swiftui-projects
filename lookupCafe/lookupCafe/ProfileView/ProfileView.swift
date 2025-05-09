@@ -10,6 +10,8 @@ import FirebaseAuth
 
 
 struct MyFovoriteView: View {
+    @ObservedObject var user = UserDataManager.shared
+    
     var body: some View {
         Text("我的最愛")
     }
