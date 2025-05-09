@@ -17,6 +17,9 @@ struct lookupCafeApp: App {
 
     init() {
         FirebaseApp.configure()
+        
+        // 初始化登入者（無論是否有登入，先初始化）
+        _ = UserDataManager.shared
     }
 
     var body: some Scene {

@@ -75,6 +75,8 @@ struct CafeDetailView: View {
     // 所有資料都儲存在cafeinfoobject
     var cafeObj: CafeInfoObject
     
+    @ObservedObject var userManager = UserDataManager.shared
+    
     /**
      參考有哪些服務
      let servicesArray = [
@@ -199,17 +201,48 @@ struct CafeDetailView: View {
             }
         } else {
             Text("No reviews yet")
+                .frame(width: .infinity)
+                .padding(.horizontal, 20)
         }
         
+    }
+    
+    // 有至少一個服務項目才會顯示，沒有就沒有
+    @ViewBuilder
+    func serviceCard() -> some View {
+        if cafeObj.services.contains(true) {
+            VStack(alignment: .leading) {
+                Text("服務項目")
+                    .font(.title3)
+                    .bold()
+                serviceIcon()
+            }
+            .padding()
+            .background(.white)
+            .cornerRadius(12)
+        }
     }
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(cafeObj.shopName)
-                        .font(.largeTitle)
-                        .bold()
+                    // 顯示店名和加入我的最愛
+                    HStack {
+                        Text(cafeObj.shopName)
+                            .font(.largeTitle)
+                            .bold()
+                        
+                        Spacer()
+                        
+                        Button {
+                            userManager.toggleFavorite(cafeId: cafeObj.id.uuidString)
+                        } label: {
+                            Image(systemName: userManager.isFavorite(cafeId: cafeObj.id.uuidString) ? "heart.fill" : "heart")
+                                .foregroundColor(.red)
+                                                        .padding()
+                        }
+                    }
                     
                     HStack(spacing: 8) {
                         Image(systemName: "star.fill")
@@ -232,24 +265,16 @@ struct CafeDetailView: View {
                 .cornerRadius(12)
                 .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 3)
                 
-                // 服務項目 -> 轉乘viewbuilder以防沒有服務資料
-                VStack(alignment: .leading) {
-                    Text("服務項目")
-                        .font(.title2)
-                        .bold()
-                    serviceIcon()
-                }
-                .padding()
-                .background(.white)
-                .cornerRadius(12)
+                // 服務項目
+                serviceCard()
                 
-                // 🗺️ 地圖預覽
+                // 地圖預覽
                 CafeMapPreviewView(address: cafeObj.address, shopName: cafeObj.shopName)
                     .frame(height: 300)
                     .cornerRadius(12)
                     .shadow(radius: 4)
                 
-                // 💬 評論
+                // 評論
                 VStack(alignment: .leading, spacing: 12) {
                     Text("評論")
                         .bold()
