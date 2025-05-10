@@ -14,6 +14,7 @@ class UserDataManager: ObservableObject {
     static let shared = UserDataManager()
     
     @Published var favoriteCafeIds: [String] = []
+    @Published var userData: [String: Any] = [:]
     
     private var db = Firestore.firestore()
     private var uid: String? {
@@ -22,6 +23,10 @@ class UserDataManager: ObservableObject {
     
     private init() {
         fetchFavorites()
+    }
+    
+    func fetchIserData() {
+        // 抓這個使用者的基本資料
     }
     
     func fetchFavorites() {

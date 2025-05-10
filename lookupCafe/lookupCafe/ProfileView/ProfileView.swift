@@ -13,7 +13,7 @@ struct MyFovoriteView: View {
     @ObservedObject var user = UserDataManager.shared
     
     var body: some View {
-        Text("我的最愛")
+        Text("user.userData")
     }
 }
 
