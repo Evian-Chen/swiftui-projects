@@ -10,22 +10,8 @@ import FirebaseAuth
 
 
 struct MyFovoriteView: View {
-    @ObservedObject var user = UserDataManager.shared
-    
     var body: some View {
-        Text("user.userData")
-    }
-}
-
-struct RecentViewsView: View {
-    var body: some View {
-        Text("最近瀏覽")
-    }
-}
-
-struct EditProfileView: View {
-    var body: some View {
-        Text("EditProfileView")
+        Text("my favorite view")
     }
 }
 
@@ -61,7 +47,9 @@ struct LogOutView: View {
 
 struct SignedInView: View {
     // 已經登入的user資料
-        var authViewModel: AuthViewModel
+    var authViewModel: AuthViewModel
+    
+    @ObservedObject var user = UserDataManager.shared
     
     var body: some View {
         NavigationStack {
@@ -74,6 +62,8 @@ struct SignedInView: View {
                     .frame(width: 100, height: 100)
                     .foregroundColor(.blue)
                     .padding(.bottom, 20)
+                
+                Text("Email: \(user.email)")
                 
                 ForEach(ProfileData.allCases, id: \.self) { dataCase in
                     dataCase.ButtonView

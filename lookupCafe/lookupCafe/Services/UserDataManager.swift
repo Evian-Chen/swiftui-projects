@@ -14,7 +14,8 @@ class UserDataManager: ObservableObject {
     static let shared = UserDataManager()
     
     @Published var favoriteCafeIds: [String] = []
-    @Published var userData: [String: Any] = [:]
+    @Published var email: String = "loading..."
+    @Published var createdAt: String = "loading..."
     
     private var db = Firestore.firestore()
     private var uid: String? {
@@ -25,9 +26,29 @@ class UserDataManager: ObservableObject {
         fetchFavorites()
     }
     
-    func fetchIserData() {
-        // 抓這個使用者的基本資料
+    /**
+     let userData: [String: Any] = [
+         "email": user.email ?? "",
+         "createdAt": FieldValue.serverTimestamp(),
+         "favorites": []
+     ]
+     */
+    func fetchUserData() {
+        guard let uid = uid else { return }
+        db.collection("users").document(uid).getDocument { doc, error in
+            if let data = doc?.data() {
+                self.email = data["email"] as? String ?? "無資料"
+                
+                if let timestamp = data["createdAt"] as? Timestamp {
+                    let formatter = DateFormatter()
+                    formatter.dateStyle = .medium
+                    formatter.timeStyle = .short
+                    self.createdAt = formatter.string(from: timestamp.dateValue())
+                }
+            }
+        }
     }
+
     
     func fetchFavorites() {
         guard let uid = uid else { return }

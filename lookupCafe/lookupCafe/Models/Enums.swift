@@ -88,8 +88,8 @@ enum RecommendationCategory: String {
 // MARK: - ProfileData
 enum ProfileData: String, CaseIterable {
     case myFavorite = "我的最愛"
-    case recentView = "最近瀏覽"
-    case editProfile = "編輯個人檔案"
+//    case recentView = "最近瀏覽"
+//    case editProfile = "編輯個人檔案"
     case settings = "設定"
     
     @ViewBuilder
@@ -106,28 +106,28 @@ enum ProfileData: String, CaseIterable {
                     .cornerRadius(10)
                     .padding(.horizontal, 50)
             }
-        case .recentView:
-            NavigationLink {
-                RecentViewsView()
-            } label: {
-                Text(self.rawValue)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    .padding(.horizontal, 50)
-            }
-        case .editProfile:
-            NavigationLink {
-                EditProfileView()
-            } label: {
-                Text(self.rawValue)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    .padding(.horizontal, 50)
-            }
+//        case .recentView:
+//            NavigationLink {
+//                RecentViewsView()
+//            } label: {
+//                Text(self.rawValue)
+//                    .frame(maxWidth: .infinity, alignment: .leading)
+//                    .padding()
+//                    .background(Color(.systemGray6))
+//                    .cornerRadius(10)
+//                    .padding(.horizontal, 50)
+//            }
+//        case .editProfile:
+//            NavigationLink {
+//                EditProfileView()
+//            } label: {
+//                Text(self.rawValue)
+//                    .frame(maxWidth: .infinity, alignment: .leading)
+//                    .padding()
+//                    .background(Color(.systemGray6))
+//                    .cornerRadius(10)
+//                    .padding(.horizontal, 50)
+//            }
         case .settings:
             NavigationLink {
                 SettingsView()
