@@ -9,12 +9,6 @@ import SwiftUI
 import FirebaseAuth
 
 
-struct MyFovoriteView: View {
-    var body: some View {
-        Text("my favorite view")
-    }
-}
-
 struct SettingsView: View {
     var body: some View {
         Text("SettingsView")

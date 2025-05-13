@@ -134,7 +134,7 @@ struct HeaderDetailView: View {
             }
             .onAppear {
                 print("🪵 categoryName: \(category.rawValue)")
-                print("🪵 所有 keys: \(categoryManager.categoryObjcList.keys)")
+//                print("🪵 所有 keys: \(categoryManager.categoryObjcList.keys)")
             }
             .navigationTitle("這裡是 \(category.title)")
             .navigationBarTitleDisplayMode(.large)

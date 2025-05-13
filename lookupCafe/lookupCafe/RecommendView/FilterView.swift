@@ -101,7 +101,3 @@ struct FilterView: View {
         }
     }
 }
-
-#Preview {
-    RecommendView()
-}

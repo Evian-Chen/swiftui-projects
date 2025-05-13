@@ -30,7 +30,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            RecommendView()
+            RecommendView(categoryManager: categoryManager)
                 .tabItem{ TabItemView(obj: .recommend) }
                 .environmentObject(categoryManager)
             

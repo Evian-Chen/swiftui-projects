@@ -18,8 +18,20 @@ struct lookupCafeApp: App {
     init() {
         FirebaseApp.configure()
         
-        // 初始化登入者（無論是否有登入，先初始化）
+        // 初始化這位使用者
         _ = UserDataManager.shared
+        
+        Task {
+            let fixer = FirestoreFixer()
+            await fixer.fixAllCategories(categories: [
+                "serves_beer",
+                "serves_brunch",
+                "serves_dinner",
+                "takeout",
+                "highRatings"
+            ])
+        }
+
     }
 
     var body: some Scene {

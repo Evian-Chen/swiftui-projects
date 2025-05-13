@@ -9,11 +9,12 @@ import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
 import GoogleSignIn
+import SwiftUICore
 
 class AuthViewModel: ObservableObject {
     @Published var user: User?
     @Published var isSignedIn: Bool = false
-    
+        
     func SignInByGoogle() {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         
@@ -58,6 +59,8 @@ class AuthViewModel: ObservableObject {
                     
                     // load in 目前的登入者的資料庫
                     self.setupUserDocument()
+                    
+                    UserDataManager.shared.SignInInit()
                 }
             }
             
@@ -67,6 +70,7 @@ class AuthViewModel: ObservableObject {
     func SignOutGoogle() {
         let firebaseAuth = Auth.auth()
         do {
+            self.isSignedIn = false
             try firebaseAuth.signOut()
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
@@ -85,7 +89,8 @@ class AuthViewModel: ObservableObject {
                 let userData: [String: Any] = [
                     "email": user.email ?? "",
                     "createdAt": FieldValue.serverTimestamp(),
-                    "favorites": []
+                    "favoritesIds": [],
+                    "favoritesCafeData": [:]
                 ]
                 userRef.setData(userData) { error in
                     if let error = error {

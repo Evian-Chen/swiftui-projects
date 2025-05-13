@@ -9,13 +9,14 @@ import SwiftUI
 import SwiftUICore
 
 struct RecommendView: View {
+    @StateObject var categoryManager: CategoryManager
+    
     var body: some View {
         NavigationView {
             ScrollView {
                 LazyVStack(spacing: 24, pinnedViews: .sectionHeaders) {
-                    RecommendationSectionView(category: .petCafe)
-                    RecommendationSectionView(category: .workCafe)
-                    RecommendationSectionView(category: .highRatings)
+                    RecommendationSectionView(category: .beerCafe, categoryManager: categoryManager)
+                    RecommendationSectionView(category: .highRatings, categoryManager: categoryManager)
                 }
                 .padding(.vertical)
             }
@@ -24,7 +25,4 @@ struct RecommendView: View {
     }
 }
 
-#Preview {
-    RecommendView()
-}
 

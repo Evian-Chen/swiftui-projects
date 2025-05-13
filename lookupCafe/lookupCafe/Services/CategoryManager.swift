@@ -54,9 +54,10 @@ class CategoryManager: ObservableObject {
                     let city = cityDoc.documentID
                     print("cur city: \(city)")
                     guard let districts = locManager.cityDistricts[city] else {
-                        print("\(city) not exists")
+                        print("\(city) not exists in locManager.cityDistricts")
                         continue
                     }
+
 
                     for district in districts {
                         print("cur district: \(district)")

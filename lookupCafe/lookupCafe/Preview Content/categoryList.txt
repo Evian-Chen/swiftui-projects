@@ -1,5 +1,2 @@
-highRatings
 serves_beer
-serves_brunch
-serves_dinner
-takeout
+highRatings

@@ -30,6 +30,42 @@ struct CafeInfoObject: Identifiable {
     var reviews: [Review]?
 }
 
+extension CafeInfoObject {
+    static func fromFirestore(data: [String: Any], id: String) -> CafeInfoObject? {
+        guard let uuid = UUID(uuidString: id) else { return nil }
+        
+        let reviewDicts = data["reviews"] as? [[String: Any]]
+        let reviews: [Review]? = reviewDicts?.compactMap { dict in
+            guard let time = dict["review_time"] as? String,
+                  let name = dict["reviewer_name"] as? String,
+                  let rating = dict["reviewer_rating"] as? Int,
+                  let text = dict["reviewer_text"] as? String else {
+                return nil
+            }
+            return Review(
+                review_time: time,
+                reviewer_name: name,
+                reviewer_rating: rating,
+                reviewer_text: text
+            )
+        }
+        
+        return CafeInfoObject(
+            id: uuid,
+            shopName: data["shopName"] as? String ?? "",
+            city: data["city"] as? String ?? "",
+            district: data["district"] as? String ?? "",
+            address: data["address"] as? String ?? "",
+            phoneNumber: data["phoneNumber"] as? String ?? "",
+            rating: data["rating"] as? Int ?? 0,
+            services: data["services"] as? [Bool] ?? [],
+            types: data["types"] as? [String] ?? [],
+            weekdayText: data["weekdayText"] as? [String] ?? [],
+            reviews: reviews
+        )
+    }
+}
+
 struct Review: Identifiable {
     var id = UUID()
     
@@ -38,3 +74,4 @@ struct Review: Identifiable {
     var reviewer_rating: Int
     var reviewer_text: String
 }
+

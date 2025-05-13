@@ -232,16 +232,21 @@ struct CafeDetailView: View {
                         Text(cafeObj.shopName)
                             .font(.largeTitle)
                             .bold()
+                            .padding(.horizontal)
                         
-                        Spacer()
-                        
-                        Button {
-                            userManager.toggleFavorite(cafeId: cafeObj.id.uuidString)
-                        } label: {
-                            Image(systemName: userManager.isFavorite(cafeId: cafeObj.id.uuidString) ? "heart.fill" : "heart")
-                                .foregroundColor(.red)
-                                                        .padding()
+                        // 登入過後才會有愛心圖案
+                        if userManager.isSignIn() {
+                            Button {
+                                userManager.toggleFavorite(cafeObj: cafeObj)
+                            } label: {
+                                Image(systemName: userManager.isFavorite(cafeId: cafeObj.id.uuidString) ? "heart.fill" : "heart")
+                                    .foregroundColor(.red)
+                                    .fixedSize()
+                                    .frame(width: 50, height: 50, alignment: .trailing)
+                                    .padding()
+                            }
                         }
+                        
                     }
                     
                     HStack(spacing: 8) {
@@ -293,21 +298,3 @@ struct CafeDetailView: View {
     }
     
 }
-
-//#Preview {
-//    CafeDetailView(cafeObj: CafeInfoObject(
-//        shopName: "Chill Corner Cafe",
-//        city: "新竹市",
-//        district: "北區",
-//        address: "北門街60號",
-//        phoneNumber: "03-3456-7890",
-//        rating: 3,
-//        services: [false, true, false, true, true, true, true],
-//        types: ["pet", "casual", "local"],
-//        weekdayText: ["每日: 10:00–18:00"],
-//        reviews: [
-//             Review(review_time: "2025-04-07", reviewer_name: "志強", reviewer_rating: 3, reviewer_text: "本地人常去的小店，寵物友善。")
-//        ]
-//    ))
-//}
-//

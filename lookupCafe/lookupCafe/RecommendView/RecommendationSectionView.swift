@@ -7,18 +7,24 @@
 
 import SwiftUI
 
-// 定義每個section，包含header和咖啡廳的內容
 struct RecommendationSectionView: View {
     var category: RecommendationCategory
-    
+    @ObservedObject var categoryManager: CategoryManager
+
     var body: some View {
         Section {
-            // 從資料庫抓出對應資料裝入CafeInfoObject，再依序顯示，一次最多顯示五筆
-            ForEach(0 ..< 5, id: \.self) { index in
-                CafeInfoCardView(cafeObj: sampleCafes[index])
+            let cafes = categoryManager.categoryObjcList[category.englishCategoryName]?.cleanCafeData ?? []
+
+            if cafes.isEmpty {
+                Text("載入中...")
+            } else {
+                ForEach(cafes.prefix(5)) { cafe in
+                    CafeInfoCardView(cafeObj: cafe)
+                }
             }
         } header: {
-            SectionHeaderView(category: category)
+            SectionHeaderView(title: category.title, category: category)
         }
     }
 }
+
