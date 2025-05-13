@@ -17,7 +17,6 @@ struct lookupCafeApp: App {
 
     init() {
         FirebaseApp.configure()
-        
         // 初始化這位使用者
         _ = UserDataManager.shared
         
