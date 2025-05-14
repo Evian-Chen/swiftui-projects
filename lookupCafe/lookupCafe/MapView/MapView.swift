@@ -9,73 +9,61 @@ import SwiftUI
 import GoogleMaps
 
 struct GMSMapsView: UIViewRepresentable {
-    func makeUIView(context: Context) -> GMSMapView {
-        let camera = GMSCameraPosition.camera(
-            withLatitude: 25.034012,  // 台北101
-            longitude: 121.564461,
-            zoom: 15
-        )
-        let mapView = GMSMapView(frame: .zero)
-        mapView.camera = camera
+    var coordinate: CLLocationCoordinate2D?
 
-        // 加一個 marker 做示範
+    func makeUIView(context: Context) -> GMSMapView {
+        let defaultCoordinate = coordinate ?? CLLocationCoordinate2D(latitude: 25.034012, longitude: 121.564461)
+        let camera = GMSCameraPosition.camera(withTarget: defaultCoordinate, zoom: 15)
+        let mapView = GMSMapView(frame: .zero, camera: camera)
+
+        // 加上 marker
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: 25.034012, longitude: 121.564461)
-        marker.title = "Taipei 101"
-        marker.snippet = "台北市信義區"
+        marker.position = defaultCoordinate
+        marker.title = "目前位置"
+        marker.snippet = "您所在的位置"
         marker.map = mapView
 
         return mapView
     }
 
     func updateUIView(_ uiView: GMSMapView, context: Context) {
-        // 這裡暫時不需要寫
+        // 更新 marker（必要時加）
     }
 }
 
 
-
 struct MapView: View {
-    @EnvironmentObject var locationManager: LocationDataManager
+//    @EnvironmentObject var locationManager: LocationDataManager
     
-    @State private var selectedCity = ""
-    @State private var selectedDistrict = ""
-    
+    @State private var searchText = ""
+    @State private var isEditing = false
+
     var body: some View {
         ZStack {
-            //            Color.white.ignoresSafeArea()
-            GMSMapsView()
-                .frame(height: 300)  // 自訂顯示高度
-                .cornerRadius(12)
-                .padding()
+            // 地圖
+//            GMSMapsView(coordinate: locationManager.userLocation)
+//                .ignoresSafeArea()
+
+            Color.gray.opacity(0.2).ignoresSafeArea()
             
-            VStack {
-                HStack {
-                    Picker("選擇城市", selection: $selectedCity) {
-                        Text("選擇城市")
-                        ForEach(Array(locationManager.cityDistricts.keys), id: \.self) { city in
-                            Text(city)
-                        }
-                    } // picker city
+            VStack(spacing: 20) {
+                // 美化後的選擇列
+                VStack(spacing: 12) {
+                    TextField("Search...", text: $searchText)
+                        .frame(height: 200)
+                        .background(.white)
+                        .cornerRadius(12)
+                        .shadow(color: .gray.opacity(0.3), radius: 3, x: 0, y: 2)
+                        .padding(.horizontal)
                     
                     Spacer()
-                    
-                    Picker("選擇行政區", selection: $selectedDistrict) {
-                        Text("選擇行政區")
-                        if let distrcits = locationManager.cityDistricts[selectedCity] {
-                            ForEach(distrcits, id: \.self) { district in
-                                Text(district)
-                            }
-                        }
-                    } //Picker district
-                    
-                } // picker district
-                .frame(maxWidth: .infinity)
-                .background(.red)
-                .padding([.top, .horizontal], 20)
-                
-                Spacer()
+                }
             }
         }
     }
+}
+
+#Preview {
+    MapView()
+//        .environment(LocationDataManager())
 }

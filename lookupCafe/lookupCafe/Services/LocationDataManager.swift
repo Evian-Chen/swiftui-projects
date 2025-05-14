@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import CoreLocation
+import Foundation
 
 /**
  此class產生一個可負責監聽cityDistricts的物件（json檔案若有更新的話，會連動所有相關UI）
@@ -19,12 +21,29 @@ import Foundation
  -> 固定時間更新檢查是否有新的資料
  
  */
-class LocationDataManager: ObservableObject {
-    // 監聽該物件的所有資料更改
+class LocationDataManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let locationManager = CLLocationManager()
+    
+    @Published var userLocation: CLLocationCoordinate2D? = nil
     @Published var cityDistricts: [String: [String]] = [:]
     
-    init() {
+    override init() {
+        super.init()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
         loadCityDistrictData()
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            DispatchQueue.main.async {
+                print("抓到位置：\(location.coordinate)")
+                self.userLocation = location.coordinate
+            }
+        }
     }
     
     private func loadCityDistrictData() {

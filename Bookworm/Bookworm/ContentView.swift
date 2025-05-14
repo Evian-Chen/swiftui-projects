@@ -2,147 +2,43 @@
 //  ContentView.swift
 //  Bookworm
 //
-//  Created by mac03 on 2025/4/30.
+//  Created by hpclab on 2025/4/25.
 //
 
 import SwiftUI
-import SwiftData
-
-struct emojiRatingView: View {
-    let rating: Int
-    
-    var body: some View {
-        switch rating {
-        case 1:
-            Text("。")
-        case 2:
-            Text("。。")
-        case 3:
-            Text("。。。")
-        case 4:
-            Text("。。。。")
-        case 5:
-            Text("。。。。。")
-        default:
-            Text("X")
-        }
-    }
-}
 
 struct ContentView: View {
-    @Environment(\.modelContext) var modelContext
-    @Query(sort: [SortDescriptor(\Book.title)]) var books: [Book]
-    
-    @State private var showingAddScreen = false
-    @State private var sortType = SortType.title
-    
-    enum SortType {
-        case title, author, rating
-    }
-    
-    var filterBooks: [Book] {
-        if searchText.isEmpty {
-            return sortedBook
-        } else {
-            return sortedBook.filter { book in
-                book.title.localizedStandardContains(searchText) ||
-                book.author.localizedStandardContains(searchText)
-            }
-        }
-    }
-    
-    var sortedBook: [Book] {
-        switch sortType {
-        case .title:
-            return books.sorted { $0.title < $1.title }
-            
-        case .author:
-            return books.sorted { $0.author < $1.author }
-        case .rating:
-            return books.sorted { $0.rating < $1.rating }
-        }
-    }
-    
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("fontSize") private var fontSize = "medium"
+
     var body: some View {
-        Text(String(books.count))
-        NavigationStack {
-            List {
-                ForEach(books) { book in
-                    NavigationLink(value: book) {
-                        HStack {
-                            emojiRatingView(rating: book.rating)
-                                .font(.largeTitle)
-                            VStack(alignment: .leading) {
-                                Text(book.title)
-                                    .font(.headline)
-                                Text(book.author)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    }
+        TabView {
+            LibraryView()
+                .tabItem {
+                    Label("Library", systemImage: "books.vertical")
                 }
-                .onDelete(perform: deleteBooks)
-            }
-            .navigationTitle("Bookworm")
-            .navigationDestination(for: Book.self) { book in
-                DetailView(book: book)
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button {
-                            sortType = .title
-                        } label: {
-                            Label("Title", systemImage: "textformat")
-                        }
-                        Button {
-                            sortType = .author
-                        } label: {
-                            Label("Author", systemImage: "person")
-                        }
-                        Button {
-                            sortType = .rating
-                        } label: {
-                            Label("Rating", systemImage: "star")
-                        }
-                    } label: {
-                        Image("arrow.up.arrow.down")
-                    }
+            FavoritesView()
+                .tabItem {
+                    Label("Favorites", systemImage: "star.fill")
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add book", systemImage: "plus") {
-                        showingAddScreen.toggle()
-                    }
+            StatsView()
+                .tabItem {
+                    Label("Stats", systemImage: "chart.bar")
                 }
-                List {
-                    if books.isEmpty {
-                        Text("there's no book yet")
-                            .foregroundStyle(.secondary)
-                            .padding()
-                    } else if filterBooks.isEmpty {
-                        Text("no result")
-                            .foregroundStyle(.secondary)
-                            .padding()
-                    } else {
-                        ForEach(filterBooks) { book in
-                            
-                        }
-                    }
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gear")
                 }
-                ToolbarItem(placement: .topBarLeading) {
-                    EditButton()
-                }
-            }
-            .sheet(isPresented: $showingAddScreen) {
-                AddBookView()
-            }
         }
+        .preferredColorScheme(isDarkMode ? .dark : .light)
+        .font(fontForSize(fontSize))
     }
     
-    func deleteBooks(at offsets: IndexSet) {
-        for offset in offsets {
-            let book = books[offset]
-            modelContext.delete(book)
+    func fontForSize(_ size: String) -> Font {
+        switch size {
+        case "small": return .caption
+        case "large": return .title3
+        default: return .body
         }
     }
 }
@@ -150,3 +46,4 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+

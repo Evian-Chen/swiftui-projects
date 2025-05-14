@@ -2,11 +2,11 @@
 //  DetailView.swift
 //  Bookworm
 //
-//  Created by mac03 on 2025/4/30.
+//  Created by hpclab on 2025/4/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct DetailView: View {
     @Environment(\.modelContext) var modelContext
@@ -14,7 +14,7 @@ struct DetailView: View {
     @State private var showingDeleteAlert = false
     
     let book: Book
-    
+
     var body: some View {
         ScrollView {
             ZStack(alignment: .bottomTrailing) {
@@ -42,9 +42,9 @@ struct DetailView: View {
         .scrollBounceBehavior(.basedOnSize)
         .alert("Delete book", isPresented: $showingDeleteAlert) {
             Button("Delete", role: .destructive, action: deleteBook)
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel) { }
         } message: {
-            Text("are you sure")
+            Text("Are you sure?")
         }
         .toolbar {
             Button("Delete this book", systemImage: "trash") {
@@ -56,5 +56,17 @@ struct DetailView: View {
     func deleteBook() {
         modelContext.delete(book)
         dismiss()
+    }
+}
+
+#Preview {
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Book.self, configurations: config)
+        let example = Book(title: "Test Book", author: "Test Author", genre: "Fantasy", review: "This was a great book; I really enjoyed it.", rating: 4)
+        return DetailView(book: example)
+            .modelContainer(container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
     }
 }

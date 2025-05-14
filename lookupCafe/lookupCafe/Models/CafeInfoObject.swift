@@ -8,7 +8,7 @@
 import Foundation
 
 // 這個struct包含了要顯示出的咖啡廳的重要資訊
-struct CafeInfoObject: Identifiable {
+struct CafeInfoObject: Codable, Identifiable {
     var id = UUID()  // no need to add \.self when ForEach
     
     var shopName: String
@@ -66,7 +66,7 @@ extension CafeInfoObject {
     }
 }
 
-struct Review: Identifiable {
+struct Review: Codable, Identifiable {
     var id = UUID()
     
     var review_time: String

@@ -33,10 +33,21 @@ class CategoryManager: ObservableObject {
     @MainActor
     func asyncInit() async {
         self.categories = readInCategories()
+        
+//        LocalCacheManager.shared.clearCache()
+        if let cached = LocalCacheManager.shared.loadCafeDict() {
+            for (category, cafeList) in cached {
+                let obj = Categoryobjc(categoryName: category, data: [])
+                obj.cleanCafeData = cafeList
+                self.categoryObjcList[category] = obj
+            }
+            self.isLoaded = true
+            return
+        }
+
         self.categoryObjcList = await loadCategoryData()
         self.isLoaded = true
     }
-
 
     private func loadCategoryData() async -> [String: Categoryobjc] {
         print("loading category data")
@@ -58,14 +69,12 @@ class CategoryManager: ObservableObject {
                         continue
                     }
 
-
                     for district in districts {
                         print("cur district: \(district)")
                         let districtRef = cityDoc.reference.collection(district)
                         let cafeDoc = try await districtRef.getDocuments()
 
                         for cafeData in cafeDoc.documents {
-                            // 更新 data 也應該在主執行緒做，但暫時先收集再傳
                             categoryObjc.data.append(cafeData.data())
                         }
                     }
@@ -73,16 +82,19 @@ class CategoryManager: ObservableObject {
             } catch {
                 print("error getting document: \(error)")
             }
-            
-            print("line 75 try to make clean data")
 
-            // 將該分類的物件加入物件陣列
             await MainActor.run {
                 categoryObjc.makeCleanData()
             }
             result[category] = categoryObjc
-
         }
+
+        // 快取全部分類資料
+        var dict: [String: [CafeInfoObject]] = [:]
+        for (key, obj) in result {
+            dict[key] = obj.cleanCafeData
+        }
+        LocalCacheManager.shared.saveCafeDict(dict)
 
         return result
     }
@@ -142,8 +154,6 @@ class Categoryobjc: ObservableObject {
                 services: servicesArray,
                 types: cafe["types"] as? [String] ?? [],
                 weekdayText: cafe["weekday_text"] as? [String] ?? ["no business hours available"],
-                
-                // TODO: add comment
                 reviews: nil
             )
 
@@ -151,9 +161,9 @@ class Categoryobjc: ObservableObject {
             print("obj: \(cleanCafeInfoObjc)")
         }
 
-        // 主執行緒設定 Published 屬性
         DispatchQueue.main.async {
             self.cleanCafeData = cafeInfoObjList
         }
     }
 }
+
