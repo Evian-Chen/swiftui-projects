@@ -11,6 +11,9 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @AppStorage("fontSize") private var fontSize = "medium"
+    @AppStorage("showEmojiRating") private var showEmojiRating = true
+    @AppStorage("booksPerPage") private var booksPerPage = "all"
+
     
     @Environment(\.modelContext) private var modelContext
     @State private var showingDeleteAlert = false
@@ -26,6 +29,17 @@ struct SettingsView: View {
                         Text("Small").tag("small")
                         Text("Medium").tag("medium")
                         Text("Large").tag("large")
+                    }
+                    .pickerStyle(.segmented)
+                }
+                Section("Display Options") {
+                    Toggle("Show Emoji Ratings", isOn: $showEmojiRating)
+                }
+                Section("單頁顯示數量") {
+                    Picker("Books per Page", selection: $booksPerPage) {
+                        Text("All").tag("all")
+                        Text("5").tag("5")
+                        Text("10").tag("10")
                     }
                     .pickerStyle(.segmented)
                 }
