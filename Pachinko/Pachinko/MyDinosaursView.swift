@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MyDinosaursView: View {
+    @Bindable var gameData: GameData
 
     var body: some View {
         Text("")
