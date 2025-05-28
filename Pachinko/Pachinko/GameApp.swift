@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
-struct GameApp: App {
+struct DinoGameApp: App {
     var body: some Scene {
         WindowGroup {
-            GameView() // 進入遊戲畫面
+            MainMenuView()
+                .modelContainer(for: GameData.self)
         }
     }
 }
+
