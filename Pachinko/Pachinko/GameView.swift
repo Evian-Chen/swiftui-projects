@@ -2,27 +2,31 @@
 //  GameView.swift
 //  Pachinko
 //
-//  Created by hpcLab on 2025/3/07.
+//  Created by mac03 on 2025/5/31.
 //
-
-
-import SwiftUI
-import SpriteKit
 import SwiftUI
 import SpriteKit
 
 struct GameView: View {
-//    var scene: SKScene {
-//        let scene = GameScene()
-//        scene.size = UIScreen.main.bounds.size
-//        scene.scaleMode = .resizeFill
-//        return scene
-//    }
+    @EnvironmentObject var gameManager: GameDataManager
 
     var body: some View {
-//        SpriteView(scene: scene)
-//            .ignoresSafeArea()
-        Text("")
+        GeometryReader { geometry in
+            SpriteView(scene: {
+                let newScene = GameScene()
+
+                if let gameData = gameManager.gameData,
+                   let context = gameManager.modelContext {
+                    newScene.configure(gameData: gameData, context: context)
+                } else {
+                    print("⚠️ GameData 或 modelContext 尚未初始化")
+                }
+
+                newScene.size = geometry.size
+                newScene.scaleMode = .resizeFill
+                return newScene
+            }())
+            .ignoresSafeArea()
+        }
     }
 }
-

@@ -2,45 +2,35 @@
 //  GameApp.swift
 //  Pachinko
 //
-//  Created by Mac25 on 2025/3/19.
+//  Created by mac03 on 2025/5/31.
 //
 
 import SwiftUI
 import SwiftData
 
 @main
-struct DinoGameApp: App {
-    @State private var container: ModelContainer!
-    
+struct GameApp: App {
+    let container: ModelContainer
+
     init() {
         do {
             let config = ModelConfiguration(for: GameData.self)
             container = try ModelContainer(for: GameData.self, configurations: config)
             
+            // 將 context 傳給 GameDataManager（統一使用 shared 管理）
             let context = container.mainContext
-            
-            // 嘗試抓資料
-            let existing = try context.fetch(FetchDescriptor<GameData>())
-            if existing.isEmpty {
-                // 初始化第一筆資料
-                let newData = GameData()
-                context.insert(newData)
-                try context.save()
-                print("初始 GameData 建立完成")
-            } else {
-                print("已存在 GameData，不需重建")
-                print(existing)
-            }
+            GameDataManager.shared.configure(context: context)
             
         } catch {
-            print("初始化 SwiftData 發生錯誤：\(error)")
+            fatalError("❌ 初始化 SwiftData 失敗：\(error)")
         }
     }
+
     var body: some Scene {
         WindowGroup {
             MainMenuView()
+                .environmentObject(GameDataManager.shared)
                 .modelContainer(container)
         }
     }
 }
-

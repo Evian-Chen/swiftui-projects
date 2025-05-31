@@ -2,14 +2,13 @@
 //  RankingView.swift
 //  Pachinko
 //
-//  Created by mac03 on 2025/5/26.
+//  Created by mac03 on 2025/5/31.
 //
 
 import SwiftUI
-import SwiftData
 
 struct RankingView: View {
-    @Bindable var gameData: GameData
+    @EnvironmentObject var gameManager: GameDataManager
 
     var body: some View {
         VStack(spacing: 20) {
@@ -18,8 +17,8 @@ struct RankingView: View {
                 .bold()
                 .padding(.bottom, 10)
 
-            if !gameData.top5Score.isEmpty {
-                ForEach(Array(gameData.top5Score.enumerated()), id: \.offset) { index, score in
+            if !gameManager.gameData.top5Score.isEmpty {
+                ForEach(Array(gameManager.gameData.top5Score.enumerated()), id: \.offset) { index, score in
                     HStack {
                         Text(rankEmoji(for: index))
                             .font(.title)
@@ -50,7 +49,7 @@ struct RankingView: View {
         .padding()
     }
 
-    // 🎖 Emoji 根據名次給不同獎章
+    /// 🎖 Emoji 根據名次給不同獎章
     func rankEmoji(for index: Int) -> String {
         switch index {
         case 0: return "🥇"
@@ -58,23 +57,5 @@ struct RankingView: View {
         case 2: return "🥉"
         default: return "🎮"
         }
-    }
-}
-
-#Preview("iPad 橫向", traits: .landscapeLeft) {
-    do {
-        // 使用 in-memory 來避免寫入磁碟
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: GameData.self, configurations: config)
-
-        // 建立測試用資料
-        let sample = GameData()
-        sample.top5Score = [9870, 8200, 7000, 5800, 4200]
-        try container.mainContext.insert(sample)
-
-        return RankingView(gameData: sample)
-            .modelContainer(container)
-    } catch {
-        return Text("預覽錯誤：\(error.localizedDescription)")
     }
 }
